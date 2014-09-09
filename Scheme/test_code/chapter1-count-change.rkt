@@ -9,7 +9,9 @@
   (define result (cond ((= amount 0) 1)
         ((or (< amount 0) (= kind-of-coins 0)) 0)
         (else (+ 
-               (cc (- amount (first-denomination kind-of-coins))
+               (cc (- amount 
+                      (first-denomination 
+                       kind-of-coins))
                      kind-of-coins)
                (cc amount (- kind-of-coins 1))))))
   result)

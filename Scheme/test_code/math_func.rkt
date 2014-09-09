@@ -1,6 +1,7 @@
 #lang racket
 
 (require "utils.rkt")
+(require "math_const.rkt")
 
 (provide abs)
 (provide max)
@@ -52,7 +53,7 @@
   )
 
 (define (sqrt x)
-  (sqrt-inner 1.0 x 0.0001)
+  (sqrt-inner 1.0 x sqrt-threshold)
   )
 
 ;/*operator2*/
@@ -171,3 +172,45 @@
 
 (define (expt x n)
   (fast-expt2 x n 1))
+
+;/*trigonometric*/
+(define (sin x)
+  ;begin fmla
+  (define (fmla x)
+    (- (* 3 x) (* 4 (pow x 3))))
+  ;end fmla
+  ;begin inner
+  (define (inner x threshold)
+    (if (not (> (abs x) threshold))
+        x
+        (fmla (/ x 3))))
+  ;end inner
+  (inner x sin-threshold))
+
+(define (cos x)
+  (sqrt (- 1 (pow2 (sin x)))))
+
+;TODO : divide by zero
+(define (tan x)
+  (/ (sin x) (cos x)))
+
+(define (ctan x)
+  (/ (cos x) (sin x)))
+
+;/*GCD*/
+(define (gcd a b)
+  (if (= 0 b)
+      a
+      (gcd b (remainder a b))))
+
+;/*prime*/
+(define (prime? n)
+  ;begin inner
+  (define (inner n a)
+    (= a (remainder (pow a n) n)))
+  ;end inner
+  ;begin pick-a
+  (define (pick-a n)
+    (+ 1 (random (- n 1))))
+  ;end pick-a
+  1)
