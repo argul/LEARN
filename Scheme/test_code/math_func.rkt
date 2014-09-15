@@ -213,4 +213,6 @@
   (define (pick-a n)
     (+ 1 (random (- n 1))))
   ;end pick-a
-  1)
+  (if (not (inner n (pick-a n)))
+      false
+      ))
