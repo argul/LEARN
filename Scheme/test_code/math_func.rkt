@@ -12,6 +12,7 @@
 (provide factorial)
 (provide expt)
 (provide fib)
+(provide prime?)
 
 ;/*abs*/
 
@@ -204,15 +205,61 @@
       (gcd b (remainder a b))))
 
 ;/*prime*/
-(define (prime? n)
-  ;begin inner
-  (define (inner n a)
-    (= a (remainder (pow a n) n)))
-  ;end inner
-  ;begin pick-a
-  (define (pick-a n)
+(define (fermat-prime? n times)
+  ;begin rnd-1-n
+  (define (rnd-1-n n)
     (+ 1 (random (- n 1))))
-  ;end pick-a
-  (if (not (inner n (pick-a n)))
-      false
-      ))
+  ;end rnd-1-n
+  
+  ;begin nontrivial-root?
+  ;check if 1 == ((a * a) mod n)
+  (define (nontrivial-root? a n)
+    (cond ((= a 1) false)
+          ((= a (- n 1)) false)
+          (= 1 (remainder (pow2 a) n))))
+  ;end nontrivial-root?
+  
+  ;begin pow-restrict
+  ;prepare to calculate (pow a n) mod n, but since
+  ;((a + b * n) * c) mod n == 
+  (define (pow-restrict base exp m)
+    (cond ((= exp 0) 1)
+          ((nontrivial-root? base m) 0)
+          ((even? exp)
+           (remainder (pow2 (pow-restrict base (/ exp 2) m)) m))
+          (else
+           (remainder (* base (pow-restrict base (- exp 1) m)) m)))
+    )
+  ;end pow-restrict
+  
+  ;begin inner
+  (define (fermat-test n)
+    (define (try-number a)
+      (= a (remainder (pow-restrict a n n) n))) ;fermat-method
+    (try-number (rnd-1-n n))
+    )
+  ;end inner
+  
+  (cond ((= times 0) true)
+        ((fermat-test n) (fermat-prime? n (- times 1)))
+        (else false)
+  ))
+
+(define (prime? n)
+  (fermat-prime? n fermat-test-times)
+  )
+
+;/*unit test of prime*/
+(define (test-prime rnd)
+  (print rnd)
+  (if (prime? rnd)
+      (print "true")
+      (print "false")))
+
+(define (test-runtime-prime n)
+  (cond ((= 0 n) true)
+        (else (test-prime (+ 1 (* 2 (random 1000))))
+              (test-runtime-prime (- n 1)))
+        ))
+
+;(test-runtime-prime 20)
