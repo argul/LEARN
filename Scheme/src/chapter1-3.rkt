@@ -9,9 +9,6 @@
 (provide integral)
 (provide product)
 
-(define (even? x)
-  (= 0 (remainder x 2)))
-
 ; accumulate all (term min) while (nex min) belows max.
 (define (accumulate min max term next)
   ;(accumulate-normal min max term next 0)
@@ -44,12 +41,28 @@
       sum
       (accumulate-tail (next min) max term next (+ sum (term min)))))
 
-(define (accumulate-pi min max)
+(define (accumulate-prime min max)
+  (define (prime-print x)
+    (if (prime? x)
+      (begin (print x) true)
+      false))
   (accumulate-generalize (lambda (x y) (+ x y))
                          0 min max
                          (lambda (x) x)
                          (lambda (x) (+ x 1))
-                         prime?))
+                         ;prime-print
+                         prime?
+                         ))
+
+(define (accumulate-gcd max)
+  (define (gcd-wrapper x)
+    (= 1 (gcd x max)))
+  (accumulate-generalize (lambda (x y) (* x y))
+                         1 1 max
+                         (lambda (x) x)
+                         (lambda (x) (+ x 1))
+                         gcd-wrapper
+                         ))
 
 ; a + (a + 1) + ...... + (b - 1) + b
 (define (acc-integer a b)
@@ -137,11 +150,27 @@
            (lambda (n) (/ (get-xn n) (get-yn n)))
            (lambda (n) (+ 1 n)))))
     
+; find point near where f(x) = 0
+(define (search-zero-point f negative positive tolerate)
+  (let ((middle (average negative positive)))
+    (if (good-enough? negative positive tolerate)
+      middle
+      (let ((fx (f middle)))
+      (cond ((= 0 fx) middle)
+            ((> fx 0) (search-zero-point f negative middle tolerate))
+            (else (search-zero-point f middle positive tolerate))
+        ))
+    )))
 
-  
+(define (good-enough? negative positive tolerate)
+  (< 
+   (abs (- negative positive))
+   tolerate))
+
+
 ;begin unittests
 (define (call-unittest)
-  (if unittest
+  (if unittest 
       (do-unittest)
       false))
 
@@ -170,7 +199,13 @@
   (print (pi-product 100000))
   
   (print "sum of all primes between 3 to 100")
-  (print (accumulate-pi 3 100))
+  (print (accumulate-prime 3 100))
+  
+  (print "product of all gcd between 1 to 21")
+  (print (accumulate-gcd 21))
+  
+  (print "zero point of f(x) = x")
+  (print (search-zero-point (lambda (x) x) -20.0 10.0 0.001))
   
   true)
 

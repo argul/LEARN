@@ -4,6 +4,7 @@
 (require "math_const.rkt")
 
 (provide abs)
+(provide average)
 (provide max)
 (provide min)
 (provide pow)
@@ -12,6 +13,12 @@
 (provide factorial)
 (provide expt)
 (provide fib)
+(provide sin)
+(provide cos)
+(provide tan)
+(provide ctan)
+(provide even?)
+(provide gcd)
 (provide prime?)
 
 ;/*abs*/
@@ -21,6 +28,10 @@
       x
       (- x))
   )
+
+;/*average*/
+(define (average x y)
+  (/ (+ x y) 2))
 
 ;/*pow*/
 
