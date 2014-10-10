@@ -1,1 +1,4 @@
-Scheme/test_code/compiled/*
+Scheme/src/compiled
+.DS_Store
+*.rkt~
+*.bak
