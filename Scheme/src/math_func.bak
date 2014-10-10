@@ -205,46 +205,49 @@
       (gcd b (remainder a b))))
 
 ;/*prime*/
+(define (fermat-prime? n times)
+  ;begin rnd-1-n
+  (define (rnd-1-n n)
+    (+ 1 (random (- n 1))))
+  ;end rnd-1-n
+  
+  ;begin nontrivial-root?
+  ;check if 1 == ((a * a) mod n)
+  (define (nontrivial-root? a n)
+    (cond ((= a 1) false)
+          ((= a (- n 1)) false)
+          (= 1 (remainder (pow2 a) n))))
+  ;end nontrivial-root?
+  
+  ;begin pow-restrict
+  ;prepare to calculate (pow a n) mod n, but since
+  ;((a + b * n) * c) mod n == 
+  (define (pow-restrict base exp m)
+    (cond ((= exp 0) 1)
+          ((nontrivial-root? base m) 0)
+          ((even? exp)
+           (remainder (pow2 (pow-restrict base (/ exp 2) m)) m))
+          (else
+           (remainder (* base (pow-restrict base (- exp 1) m)) m)))
+    )
+  ;end pow-restrict
+  
+  ;begin inner
+  (define (fermat-test n)
+    (define (try-number a)
+      (= a (remainder (pow-restrict a n n) n))) ;fermat-method
+    (try-number (rnd-1-n n))
+    )
+  ;end inner
+  
+  (cond ((= times 0) true)
+        ((fermat-test n) (fermat-prime? n (- times 1)))
+        (else false)
+  ))
+
 (define (prime? n)
   (fermat-prime? n fermat-test-times)
   )
-
-(define (fermat-prime? n times)
-  (define (real-times)
-    (if (> times (- n 2)) (- n 2)
-        times))
-  (cond ((< n 2) false)
-        ((= n 2) true)
-        ((= times 0) true)
-        ((fermat-check? n) (fermat-prime? n (- (real-times) 1)))
-        (else false)))
-        
-
-(define (fermat-check? n)
-  (define (check-number a)
-    (= a (remainder (pow-restrict a n n) n))) ;fermat thoery
-  (define rnd (rnd-1-n n))
-  (if (nontrivial-root? rnd n) (fermat-check? n)
-      (check-number rnd)))
-
-(define (rnd-1-n n)
-  (+ 1 (random (- n 1))))
-
-;check if 1 == ((a * a) mod n)
-(define (nontrivial-root? a n)
-  (cond ((= a 1) false)
-        ((= a (- n 1)) false)
-        (else (= 1 (remainder (pow2 a) n)))))
-
-;prepare to calculate (pow a n) mod n, but since
-;((a + b * n) * c) mod n == (a * c) mod n, we just skip
-;the unnecessary mutiply.
-(define (pow-restrict base exp m)
-  (cond ((= exp 0) 1)
-        ((even? exp)
-         (remainder (pow2 (pow-restrict base (/ exp 2) m)) m))
-        (else
-         (remainder (* base (pow-restrict base (- exp 1) m)) m))))
 
 ;/*unit test of prime*/
 (define (test-prime rnd)
@@ -258,6 +261,5 @@
         (else (test-prime (+ 1 (* 2 (random 1000))))
               (test-runtime-prime (- n 1)))
         ))
-
 
 ;(test-runtime-prime 20)
