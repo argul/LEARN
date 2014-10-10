@@ -1,4 +1,4 @@
-Scheme/src/compiled/
+compiled/
 .DS_Store
 *.rkt~
 *.bak
