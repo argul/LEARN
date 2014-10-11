@@ -240,6 +240,11 @@
   (print "root of function : x = 2.0 / x is sqrt(2)")
   (print (seekfix (lambda (x) (/ 2.0 x)) 1.0))
   
+  (print "root of function : x = 1 + 1/x is ")
+  (print (seekfix (lambda (x) (+ 1 (/ 1 x))) 1.0))
+  
+  (print "root of function : x = log(10000)/log(x)")
+  (print (seekfix (lambda (x) (/ (log 10000) (log x))) 2.0))
   true)
 
 (call-unittest)
