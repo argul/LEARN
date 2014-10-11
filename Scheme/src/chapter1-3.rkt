@@ -151,21 +151,42 @@
            (lambda (n) (+ 1 n)))))
     
 ; find point near where f(x) = 0
-(define (search-zero-point f negative positive tolerate)
+(define (seekzero f min max)
+  (let ((a (f min))
+        (b (f max))
+        (tolerate 0.001))
+    (cond ((and (negative? a) (positive? b)) (seek-zero-point f min max tolerate))
+          ((and (positive? a) (negative? b)) (seek-zero-point f max min tolerate))
+          ((= a 0) min)
+          ((= b 0) max)
+          (else (error "invalid input min and max, not opposite sign")))))
+  
+
+(define (seek-zero-point f negative positive tolerate)
+  (define (good-enough? negative positive tolerate)
+    (< 
+     (abs (- negative positive))
+     tolerate))
   (let ((middle (average negative positive)))
     (if (good-enough? negative positive tolerate)
       middle
       (let ((fx (f middle)))
       (cond ((= 0 fx) middle)
-            ((> fx 0) (search-zero-point f negative middle tolerate))
-            (else (search-zero-point f middle positive tolerate))
+            ((> fx 0) (seek-zero-point f negative middle tolerate))
+            (else (seek-zero-point f middle positive tolerate))
         ))
     )))
 
-(define (good-enough? negative positive tolerate)
-  (< 
-   (abs (- negative positive))
-   tolerate))
+(define (seekfix f x)
+  (seek-fix-point f x 0.001))
+
+(define (seek-fix-point f start-value tolerate)
+  (define (good-enough? a b)
+    (< (abs (- a b)) tolerate))
+  (let ((new-value (f start-value)))
+    (if (good-enough? start-value new-value)
+        new-value
+        (seek-fix-point f (average start-value new-value) tolerate))))
 
 
 ;begin unittests
@@ -205,7 +226,19 @@
   (print (accumulate-gcd 21))
   
   (print "zero point of f(x) = x")
-  (print (search-zero-point (lambda (x) x) -20.0 10.0 0.001))
+  (print (seekzero (lambda (x) x) -20.0 10.0))
+  
+  (print "zero point of f(x) = sin(x)")
+  (print (seekzero sin 2.0 4.0))
+  
+  (print "fix point of f(x) = cos(x)")
+  (print (seekfix cos 1.0))
+  
+  (print "root of function : x = sin(x) + cos(x)")
+  (print (seekfix (lambda (x) (+ (sin x) (cos x))) 1.0))
+  
+  (print "root of function : x = 2.0 / x is sqrt(2)")
+  (print (seekfix (lambda (x) (/ 2.0 x)) 1.0))
   
   true)
 

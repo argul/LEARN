@@ -195,7 +195,7 @@
   (define (inner x threshold)
     (if (not (> (abs x) threshold))
         x
-        (fmla (/ x 3))))
+        (fmla (sin (/ x 3)))))
   ;end inner
   (inner x sin-threshold))
 
