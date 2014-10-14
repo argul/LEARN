@@ -20,6 +20,7 @@
 (provide even?)
 (provide gcd)
 (provide prime?)
+(provide devired)
 
 ;/*abs*/
 
@@ -272,3 +273,7 @@
 
 
 ;(test-runtime-prime 20)
+
+; calculate f'(x) = df(x)/dx at x = a
+(define (devired f a)
+  (/ (- (f (+ a devired-dx)) (f a)) devired-dx))

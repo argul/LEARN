@@ -3,6 +3,7 @@
 (define unittest true)
 
 (require "utils.rkt")
+(require "math_const.rkt")
 (require "math_func.rkt")
 
 (provide accumulate)
@@ -178,16 +179,56 @@
     )))
 
 (define (seekfix f x)
-  (seek-fix-point f x 0.001))
+  (seekfix-imp f x seekfix-tolerate)
+  )
 
-(define (seek-fix-point f start-value tolerate)
+(define (seekfix-imp f start-value tolerate)
   (define (good-enough? a b)
     (< (abs (- a b)) tolerate))
   (let ((new-value (f start-value)))
     (if (good-enough? start-value new-value)
         new-value
-        (seek-fix-point f (average start-value new-value) tolerate))))
+        (seekfix-imp f (average start-value new-value) tolerate))))
 
+(define (newton-transform f)
+  (lambda (x)
+    (- x (/ (f x) (devired f x)))))
+
+; find x where f(x) = 0 with an initial guess
+(define (newton-method f guess)
+  (seekfix (newton-transform f) guess))
+
+
+; fn(1) / fd(1) + (fn(2) / fd(2) + (.....)) until count-k
+(define (cont-frac fn fd count-k)
+  ;(cont-frac-imp fn fd 1 count-k)
+  (cont-frac-imp2 fn fd count-k (+ 0.0 (/ (fn count-k) (fd count-k))))
+  )
+
+(define (cont-frac-imp fn fd step count-k)
+  (let ((r1 (+ 0.0 (fn step))) (r2 (+ 0.0 (fd step))))
+    (if (= count-k step)
+        (/ r1 r2)
+        (/ r1 (+ r2 (cont-frac-imp fn fd (+ step 1) count-k))))))
+
+(define (cont-frac-imp2 fn fd k sum)
+  (let ((r1 (+ 0.0 (fn k))) (r2 (+ 0.0 (fd k))))
+    (if (= k 0)
+        sum
+        (cont-frac-imp2 fn fd (- k 1) (/ r1 (+ r2 sum))))))
+
+(define (math-e-helper k)
+  (define n (+ k 1))
+  (define r (remainder n 3))
+  (if (= 0 r)
+      (* 2 (/ r 3))
+      1))
+
+(define math-e
+  (+ 2 (cont-frac (lambda (x) 1)
+                  math-e-helper
+                  10000)))
+        
 
 ;begin unittests
 (define (call-unittest)
@@ -239,6 +280,36 @@
   
   (print "root of function : x = 2.0 / x is sqrt(2)")
   (print (seekfix (lambda (x) (/ 2.0 x)) 1.0))
+  
+  (print "root of function : x = 1 - 1/x")
+  (print (seekfix (lambda (x) (+ 1 (/ 1 x))) 1.0))
+  
+  (print "root of cont-frac with fn === 1 and fd === 1 is")
+  (print (cont-frac (lambda (n) 1) 
+                    (lambda (n) 1) 
+                    10000))
+  
+  (print "math-e is")
+  (print math-e)
+  
+  (print "f(x) = x * x * x, f'(x) at x == 1 is")
+  (print (devired (lambda (x) (pow x 3)) 1))
+  
+  (print "try newton method with sqrt2")
+  (print (newton-method (lambda (x) (- x (/ 2 x))) 1.0))
+  
+  (define (cubic a b c)
+    (lambda (x)
+      (+ (pow x 3) (* a (pow2 x)) (* b x) c)))
+  (print (newton-method (cubic 1 2 3) 1.0))
+  
+  (define (double f)
+    (lambda (x)
+      (f (f x))))
+  (define (inc x)
+    (+ x 1))
+  (print ((double inc) 1))
+  (print (((double (double double)) inc) 5))
   
   true)
 
