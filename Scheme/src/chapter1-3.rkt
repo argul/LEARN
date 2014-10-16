@@ -281,7 +281,7 @@
   (print "root of function : x = 2.0 / x is sqrt(2)")
   (print (seekfix (lambda (x) (/ 2.0 x)) 1.0))
   
-  (print "root of function : x = 1 - 1/x")
+  (print "root of function : x = 1 + 1/x")
   (print (seekfix (lambda (x) (+ 1 (/ 1 x))) 1.0))
   
   (print "root of cont-frac with fn === 1 and fd === 1 is")
@@ -298,18 +298,65 @@
   (print "try newton method with sqrt2")
   (print (newton-method (lambda (x) (- x (/ 2 x))) 1.0))
   
+  ;1.40
   (define (cubic a b c)
     (lambda (x)
       (+ (pow x 3) (* a (pow2 x)) (* b x) c)))
   (print (newton-method (cubic 1 2 3) 1.0))
   
+  ;1.41
   (define (double f)
     (lambda (x)
       (f (f x))))
   (define (inc x)
     (+ x 1))
+  
   (print ((double inc) 1))
   (print (((double (double double)) inc) 5))
+  
+  ;1.42
+  (define (compose f g)
+    (lambda (x) (f (g x))))
+  (print ((compose pow2 inc) 6))
+  
+  ;1.43
+  (define (repeated f n)
+    (lambda (x)
+      (if (= n 1)
+          (f x)
+          ((compose f (repeated f (- n 1))) x))))
+
+  (print ((repeated pow2 2) 5))
+  (print ((repeated (lambda (x) (* 2 x)) 10) 1))
+  
+  ;1.44
+  (define smooth-dx 0.00001)
+  (define (smooth f)
+    (lambda (x)
+      (/ 3 (+ (f (+ x smooth-dx))
+              (f x)
+              (f (- x smooth-dx))))))
+  
+  (define (smooth-n f n)
+    ((repeated smooth n) f))
+  
+  (define(test-func x)
+    (- (pow x 5) 1))
+  (print (((repeated smooth 5) test-func) 2.0))
+  (print ((smooth-n test-func 5) 2.0))
+  
+  ;1.46
+  (define (iterative-improve f good-enough? improve)
+    (lambda (x)
+      (let ((iter (f x)))
+        (if (good-enough? x iter)
+            iter
+            ((iterative-improve f good-enough? improve) (improve x iter))))))
+  
+  (print ((iterative-improve (lambda (x) (+ 1 (/ 1 x)))
+                            (lambda (x x1) (< (abs (- x x1)) seekfix-tolerate))
+                            average)
+         1.0))
   
   true)
 
