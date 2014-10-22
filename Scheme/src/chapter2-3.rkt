@@ -49,7 +49,7 @@
       answer
       (square-list2 (cdr items) (append2 answer (square (car items))))))
 
-(define test (list (list 1 2) (list 3 4)))
+;(define test (list (list 1 2) (list 3 4)))
 
 (define (tree-map proc tree)
   (map (lambda (x)
@@ -73,4 +73,29 @@
       (let ((head (car set)) (rest (subset (cdr set))))
         (append rest (map (lambda (x) (cons head x)) rest)))))
 
-(subset (list 1 2 3 4))
+
+(define (filter predicate sequence)
+  (cond ((null? sequence) null)
+        ((predicate (car sequence)) (cons (car sequence) (filter predicate (cdr sequence))))
+        (else (filter predicate (cdr sequence)))))
+
+;(filter (lambda (x) (= 0 (remainder x 2))) (list 1 2 3 4 5 6 7))
+
+(define (accumulate operator initial sequence)
+  (if (null? sequence)
+      initial
+      (operator (car sequence) (accumulate operator initial (cdr sequence)))))
+
+;(accumulate + 0 (list 1 2 3 4 5))
+
+(define (enumrate-interval min max step)
+  (if (> min max)
+      null
+      (cons min (enumrate-interval (+ min step) max step))))
+
+;(enumrate-interval 1 100 2)
+
+(define (map3 proc sequence)
+  (accumulate (lambda (x y) (cons (proc x) y)) '() sequence))
+
+(map3 (lambda (x) (* x x)) (list 1 2 3 4))
