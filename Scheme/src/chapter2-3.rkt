@@ -1,5 +1,7 @@
 #lang racket
 
+(require "utils.rkt")
+
 (define (g . w)
   w)
 
@@ -49,7 +51,7 @@
       answer
       (square-list2 (cdr items) (append2 answer (square (car items))))))
 
-;(define test (list (list 1 2) (list 3 4)))
+(define test (list 1 (list 2 (list 3 4) (list 5 6)) (list (list 7 8 9) 10)))
 
 (define (tree-map proc tree)
   (map (lambda (x)
@@ -98,4 +100,61 @@
 (define (map3 proc sequence)
   (accumulate (lambda (x y) (cons (proc x) y)) '() sequence))
 
-(map3 (lambda (x) (* x x)) (list 1 2 3 4))
+;(map3 (lambda (x) (* x x)) (list 1 2 3 4))
+
+; an*x^n + a(n-1)*x^(n-1) + ...... + a1*x + a0
+(define (horner-eval x sequence a0)
+  (accumulate (lambda (an result) (+ (* result x) an)) a0 sequence))
+
+;(horner-eval 2 (list 1 0 5 0 3) 1)
+
+(define (count-leaves sequence)
+  (accumulate (lambda (current subsequence)
+                (print "--------------------------")
+                (print current)
+                (print subsequence)
+                (print "--------------------------")
+                (if (pair? current)
+                    (append (count-leaves current) subsequence)
+                    (cons current subsequence))) 
+              '() sequence))
+
+(print test)
+(count-leaves test)
+
+(define (accumulate-n operator init sequences)
+  (if (null? (car sequences))
+      '()
+      (cons (accumulate operator init (map car sequences))
+            (accumulate-n operator init (map cdr sequences)))))
+
+(list (list 1 2 3) (list 4 5 6) (list 7 8 9) (list 10 11 12))
+(accumulate-n + 0 (list (list 1 2 3) (list 4 5 6) (list 7 8 9) (list 10 11 12)))
+
+(define (dot-product vector1 vector2)
+  (if (not (= (length vector1) (length vector2)))
+      (error "invalid arg! length mismatch!")
+      (accumulate + 0 (map * vector1 vector2))))
+
+(dot-product (list 1 2 3) (list 4 5 6))
+
+(define (make-matrix . vectors)
+  (cond ((null? vectors) (error "input is null!"))
+        ((not (pair? (car vectors))) (error "invalid inputs! not pair!"))
+        ((= 1 (length (car vectors))) (error "can't be a matrix!"))
+        (else (let ((len (length (car vectors))))
+                (accumulate (lambda (cur iter) 
+                              (if (not (= (length cur) len))
+                                  (error "length mismatch")
+                                  (cons cur iter))) 
+                            '() vectors)))))
+
+(make-matrix (list 1 2 3) (list 4 5 6) (list 7 8 9))
+;(make-matrix)
+;(make-matrix 1 2 3 4)
+;(make-matrix (list 1) (list 2))
+
+(define (matrix-*-vector matrix vector)
+  
+
+  
