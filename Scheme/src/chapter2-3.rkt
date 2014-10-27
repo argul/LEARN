@@ -1,6 +1,7 @@
 #lang racket
 
 (require "utils.rkt")
+(require "math_func.rkt")
 
 (define (g . w)
   w)
@@ -154,7 +155,39 @@
 ;(make-matrix 1 2 3 4)
 ;(make-matrix (list 1) (list 2))
 
-(define (matrix-*-vector matrix vector)
-  
 
-  
+
+(define fold-right accumulate)
+(define (fold-left op initial sequence)
+  (define (inner op result rest)
+    (if (null? rest)
+        result
+        (inner op (op result (car rest)) (cdr rest))))
+  (inner op initial sequence))
+
+;(fold-right / 1 (list 1 2 3))
+;(fold-left / 1 (list 1 2 3))
+;(fold-right + 0 (list 1 2 3))
+;(fold-left + 0 (list 1 2 3))
+
+(define (reverse-1 sequence)
+  (fold-right (lambda (x y) (append y (list x))) '() sequence))
+(reverse-1 (list 1 2 3 4))
+
+(define (reverse-2 sequence)
+  (fold-left (lambda (x y) (cons y x)) '() sequence))
+(reverse-2 (list 1 2 3 4))
+
+(define (enumrate-ascending-pair min max)
+  (accumulate append
+            '()
+            (map (lambda (i)
+                   (map (lambda (j) (list j i))
+                        (enumrate-interval 1 (- i 1) 1)))
+                   (enumrate-interval min max 1))))
+
+(enumrate-ascending-pair 1 8)
+(filter (lambda (x) (prime? (+ (car x) (car (cdr x))))) (enumrate-ascending-pair 1 8))
+
+(define (flatmap func sequence)
+  (accumulate append '() (map func sequence)))
