@@ -191,3 +191,36 @@
 
 (define (flatmap func sequence)
   (accumulate append '() (map func sequence)))
+
+(define (remove item sequence)
+  (cond ((null? sequence) null)
+        ((= item (car sequence)) (cdr sequence))
+        (else (cons (car sequence) (remove item (cdr sequence))))))
+
+(define (iter-all-sub-sets sequence)
+  (if (null? sequence)
+      '()
+      (map (lambda (x) (remove x sequence)) sequence)))
+  
+;(iter-all-sub-sets (list 1 2 3 4))
+
+(define (echo x)
+  (print x)
+  x)
+
+(define (permutations sequence)
+  (define (inner1 x seq)
+    (print x)
+    (print seq)
+    (if (null? seq)
+        (list (list x))
+        (map (lambda (y) (cons x y)) seq)))
+   
+  (if (null? sequence)
+      '()
+      (accumulate append '()
+                  (map (lambda (x)
+                         (inner1 x (permutations (remove x sequence))))
+                       sequence))))
+
+(permutations (list 1 2 3 4))
