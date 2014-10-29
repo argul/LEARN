@@ -223,4 +223,77 @@
                          (inner1 x (permutations (remove x sequence))))
                        sequence))))
 
-(permutations (list 1 2 3 4))
+;(permutations (list 1 2 3 4))
+
+(define (safe? positions)
+  (define (safe-iter? distance x subseq)
+    (cond ((null? subseq) true) 
+          ((= x (car subseq)) false)
+          ((= (+ x distance) (car subseq)) false)
+          ((= (- x distance) (car subseq)) false)
+          (else (safe-iter? (+ distance 1) x (cdr subseq)))))
+  (safe-iter? 1 (car positions) (cdr positions)))
+
+(define (adjoin-position new-row rest-of-queens)
+  (cons new-row rest-of-queens))
+
+(define (gauss-queen-offical k initial-list)
+  (if (= k 0)
+      (list '())
+      (filter
+       (lambda (positions) (safe? positions))
+       (flatmap
+        (lambda (rest-of-queens)
+          (map (lambda (new-row)
+                 (adjoin-position new-row rest-of-queens))
+               initial-list))
+        (gauss-queen-offical (- k 1) initial-list)))))
+
+(define (gauss-queen-imp count pos-list)
+  (define (check-func? number-list)
+    (check-func-imp? 1 (car number-list) (cdr number-list)))
+  (define (check-func-imp? depth cur others)
+    (cond ((null? others) true)
+          ((invalid? cur (car others) depth) false)
+          (else (check-func-imp? (+ depth 1) cur (cdr others)))))
+  (define (invalid? x y depth)
+    (cond ((= x y) true)
+          ((= (+ x depth) y) true)
+          ((= (- x depth) y) true)
+          (else false)))
+  (define (expand-pos-sequence seq)
+    (accumulate append
+                '()
+                (map (lambda (x)
+                       (map (lambda (y)
+                              (cons x y)) seq))
+                     pos-list)))
+  (if (= 1 count)
+      (map (lambda (x) (list x)) pos-list)
+      (filter check-func? (expand-pos-sequence (gauss-queen-imp (- count 1) pos-list)))))
+  
+(define (gauss-queen count)
+  (gauss-queen-imp count (enumrate-interval 1 count 1))
+  ;(gauss-queen-offical count (enumrate-interval 1 count 1))
+  )
+
+(print "gauss-2")
+(gauss-queen 2)
+
+(print "gauss-3")
+(gauss-queen 3)
+
+(print "gauss-4")
+(gauss-queen 4)
+
+(print "gauss-5")
+(gauss-queen 5)
+
+(print "gauss-6")
+(gauss-queen 6)
+
+(print "gauss-7")
+(gauss-queen 7)
+
+(print "gauss-8")
+(gauss-queen 8)
