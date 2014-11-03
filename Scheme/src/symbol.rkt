@@ -75,7 +75,9 @@
   (and (pair? seq) (eq? (car seq) '+)))
 
 (define (make-sum x y)
-  (list '+ x y))
+  (cond ((and (number? x) (= x 0)) y)
+        ((and (number? y) (= y 0)) x)
+        (else ((list '+ x y)))))
 
 (define (addend x)
   (car (cdr x)))
@@ -87,7 +89,9 @@
   (and (pair? seq) (eq? (car seq) '*)))
 
 (define (make-product x y)
-  (list '* x y))
+  (cond ((and (number? x) (= x 0)) 0)
+        ((and (number? y) (= y 0)) 0)
+        (else ((list '* x y)))))
 
 (define (multiplicand x)
   (car (cdr x)))
@@ -105,10 +109,15 @@
          (make-sum (deriv (addend expression) arg)
                    (deriv (augend expression) arg)))
         ((product? expression)
-         (make-product (deriv (multiplicand expression) arg)
-                       (deriv (multiplier expression) arg)))
+         (make-sum
+          (make-product (multiplicand expression)
+                       (deriv (multiplier expression) arg))
+          (make-product (multiplier expression)
+                       (deriv (multiplicand expression) arg))))
         (else (error "Invalid arg!"))))
 
 (define test '(* (* x y) (+ x 3)))
-(eq? (car test) '*)
-(deriv test 'x)
+;(eq? (car test) '*)
+;(deriv test 'x)
+(deriv '(* x (* x x)) 'x)
+
