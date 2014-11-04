@@ -3,6 +3,8 @@
 (require "utils.rkt")
 (require "math_func.rkt")
 
+(provide equal?)
+
 ;(list 'a 'b)
 ;(car '(ab c))
 ;(cdr '(a b c))
@@ -43,8 +45,7 @@
            (list-equal? x y))
           ((and (not (symbol? x)) (not (symbol? y)))
            (= x y))
-          (else
-           (error "Wrong type input x and y -- EQUAL?" x y))))
+          (else false)))
 
 (define (symbol-equal? x y)
     (eq? x y))
@@ -75,9 +76,25 @@
   (and (pair? seq) (eq? (car seq) '+)))
 
 (define (make-sum x y)
-  (cond ((and (number? x) (= x 0)) y)
-        ((and (number? y) (= y 0)) x)
-        (else ((list '+ x y)))))
+  ;(list '+ x y)
+  (make-sum-imp x y)
+  )
+
+(define (make-product x y)
+  ;(list '* x y)
+  (make-product-imp x y)
+  )
+
+(define (make-sum-imp x y)
+  (define (inner-numbers a b)
+    (+ a b))
+  (define (inner-symbols a b)
+    (if (eq? a b)
+        (list '* 2 b)
+        (list '+ a b)))
+  (cond ((and (number? x) (number? y)) (inner-numbers x y))
+        ((and (symbol? x) (symbol? y)) (inner-symbols x y))
+        (else (list '+ x y))))
 
 (define (addend x)
   (car (cdr x)))
@@ -88,10 +105,20 @@
 (define (product? seq)
   (and (pair? seq) (eq? (car seq) '*)))
 
-(define (make-product x y)
-  (cond ((and (number? x) (= x 0)) 0)
-        ((and (number? y) (= y 0)) 0)
-        (else ((list '* x y)))))
+(define (make-product-imp x y)
+  (define (inner-numbers a b)
+    (* a b))
+  (define (inner-symbols a b)
+    (list '* a b))
+  (define (inner-number-symbol num sym)
+    (cond ((= 0 num) 0)
+          ((= 1 num) sym)
+          (else (list '* num sym))))
+  (cond ((and (number? x) (number? y)) (inner-numbers x y))
+        ((and (symbol? x) (symbol? y)) (inner-symbols x y))
+        ((and (number? x) (symbol? y)) (inner-number-symbol x y))
+        ((and (number? y) (symbol? x)) (inner-number-symbol y x))
+        (else (list '* x y))))
 
 (define (multiplicand x)
   (car (cdr x)))
@@ -99,10 +126,32 @@
 (define (multiplier x)
   (car (cdr (cdr x))))
 
+(define (exponent? seq)
+  (and (pair? seq) (eq? (car seq) '**)))
+
+(define (exponent-base seq)
+  (car (cdr seq)))
+
+(define (exponent-exp seq)
+  (car (cdr (cdr seq))))
+
+(define (make-exponent x y)
+  (define (inner-numbers a b)
+    (pow a b))
+  (define (inner-symbols a b)
+    (list '** a b))
+  (define (inner-symbol-number a b)
+    (cond ((= b 0) 1)
+          ((= b 1) a)
+          (else (list '** a b))))
+  (cond ((and (number? x) (number? y)) (inner-numbers x y))
+        ((and (symbol? x) (symbol? y)) (inner-symbols x y))
+        (else (list '** x y))))
+
 (define (deriv expression arg)
   (cond ((number? expression) 0)
         ((variable? expression)
-         (if (same-variable? exp arg)
+         (if (same-variable? expression arg)
              1
              0))
         ((sum? expression)
@@ -114,10 +163,18 @@
                        (deriv (multiplier expression) arg))
           (make-product (multiplier expression)
                        (deriv (multiplicand expression) arg))))
+        ((exponent? expression) ;d(u^n)/dx = n * u^(n-1) * (du/dx)
+         (make-product
+          (make-product (exponent-exp expression) 
+                        (make-exponent
+                         (exponent-base expression) 
+                         (make-sum (exponent-exp expression) -1)))
+          (deriv (exponent-base expression) arg)))
         (else (error "Invalid arg!"))))
 
-(define test '(* (* x y) (+ x 3)))
+;(define test '(* (* x y) (+ x 3)))
 ;(eq? (car test) '*)
 ;(deriv test 'x)
-(deriv '(* x (* x x)) 'x)
+;(deriv '(* x (* x x)) 'x)
+;(deriv '(** x 3) 'x)
 
