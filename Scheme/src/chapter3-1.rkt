@@ -43,3 +43,81 @@
 ;((rnd 'generate))
 ;((rnd 'generate))
 
+(define test-var-global 1)
+
+(define (test-func2)
+  (display test-var-global)
+  (display "\n")
+  ;(display test-var-inner)
+  )
+
+(define (test-func1)
+  (define test-var-inner 2)
+  (test-func2))
+
+;(test-func1)
+
+(define make-withdraw
+  (lambda (balance);evaluated at global env
+    (lambda (amount)
+      ;evaluated at env in lambda (balance) where balance is binded to input when make-withdraw is called.
+      ;every time we enter make-withdraw, an env E is created and holded by the returned func, aka closure.
+      (if (>= balance amount)
+        (begin (set! balance (- balance amount))
+               balance)
+        "Insufficient funds!"))))
+
+(define (make-env initial)
+  (define balance initial)
+  (lambda (op)
+    (cond ((equal? op 'add) (lambda (x)
+                              (begin (set! balance (+ balance x))
+                                     balance)))
+          ((equal? op 'sub) (lambda (x)
+                              (begin (set! balance (- balance x))
+                                     balance)))
+          ((equal? op 'reset) (begin (set! balance initial)
+                                     balance))
+          (else (error "unknown operator!")))))
+
+;(define t1 (make-env 100))
+;(define t2 (make-env 100))
+;((t1 'add) 10)
+;((t2 'add) 10)
+;((t1 'sub) 5)
+;((t2 'sub) 5)
+;(t1 'reset)
+;(t2 'reset)
+
+(define (test-env-recursive count)
+  (define test 100)
+  (if (= 0 count)
+      true
+      (begin (set! test (- test 10))
+             (display test)
+             (display "\n")
+             (test-env-recursive (- count 1)))))
+
+(define (test-env-recursive2 count initial)
+  (define test initial)
+  (if (= 0 count)
+      true
+      (begin (set! test (- test 10))
+             (display test)
+             (display "\n")
+             (test-env-recursive2 (- count 1) test))))
+
+;(test-env-recursive 10)
+;(test-env-recursive2 10 100)
+
+;(define test 'test)
+;(display test)
+
+(define (mystery x)
+  (define (loop x y)
+    (if (null? x)
+        y
+        (let ((temp (cdr x)))
+          (set-cdr! x y)
+          (loop temp x))))
+  (loop x '()))
