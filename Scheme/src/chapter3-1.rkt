@@ -1,6 +1,5 @@
-#lang racket
-
-(require "symbol.rkt")
+#lang scheme
+(require r5rs)
 
 (define (make-accumulator initial)
   (define (add x)
@@ -121,3 +120,5 @@
           (set-cdr! x y)
           (loop temp x))))
   (loop x '()))
+
+;(mystery (list 1 2 3 4))
