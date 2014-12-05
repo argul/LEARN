@@ -77,6 +77,14 @@
         (else (cons-stream (car-stream s2)
                            (stream-merge-comparer comparer s1 (cdr-stream s2))))))
 
+(define (stream-accumulate stream)
+  (define result (cons-stream (car-stream stream)
+                              (stream-2-oper + (cdr-stream stream) result)))
+  result)
+
+(define (stream-scale factor stream)
+  (stream-1-oper (lambda (x) (* x factor)) stream))
+
 (define (stream-head stream n)
   (if (= n 0)
       empty-stream
@@ -113,6 +121,8 @@
 ;(display-head integers 10)
 ;(display-head (make-series-stream 1 (lambda (x) (* x 2))) 10)
 
+;(display-head (stream-accumulate integers) 10)
+
 ;(define s (cons-stream 1 (stream-2-oper + s s)))
 ;(display-head s 10)
 ;(define f (cons-stream 1 (stream-2-oper * f (cdr-stream integers))))
@@ -130,13 +140,59 @@
 
 (define cos-series (cons-stream 1 (stream-1-oper (lambda (x) (* -1 x)) (integrate-series sin-series))))
 (define sin-series (cons-stream 0 (integrate-series cos-series)))
-(display-head cos-series 10)
-(display-head sin-series 10)
+;(display-head cos-series 10)
+;(display-head sin-series 10)
 (define (estimate-sin x steps)
   (define x-stream (cons-stream 1 (stream-1-oper (lambda (a) (* a x)) x-stream)))
   ((lambda (stream sum)
     (begin
       (stream-for-each (lambda (a) (set! sum (+ a sum))) stream)
       sum)) (stream-head (stream-2-oper * x-stream sin-series) steps) 0))
-(estimate-sin 1.5 10)
-  
+;(estimate-sin 1.5 10)
+
+(define (mul-series s1 s2)
+  (cons-stream (* (car-stream s1) (car-stream s2))
+               (stream-2-oper + (stream-1-oper (lambda (x) (* x (car-stream s1))) (cdr-stream s2))
+                              (mul-series (cdr-stream s1) s2))))
+
+;(display-head (stream-2-oper + (mul-series sin-series sin-series) (mul-series cos-series cos-series)) 10)
+
+(define (inverse-series series)
+  (define inversed (cons-stream 1 (mul-series 
+                                   (stream-1-oper (lambda (x) (* -1 x)) (cdr-stream series))
+                                   inversed)))
+  (if (not (= 1 (car-stream series)))
+      (error "invalid input, first in series must be 1")
+      inversed))
+;(display-head cos-series 10)
+;(display-head (inverse-series cos-series) 10)
+;(display-head (mul-series (inverse-series cos-series) cos-series) 10)
+
+(define (div-series s1 s2); return s1 / s2
+  (cond ((stream-null? s2) (error "null divisor!"))
+        ((stream-null? s1) (error "null dividend!"))
+        ((= 0 (car-stream s2)) (error "constant of divisor can't be zero!"))
+        ((= 1 (car-stream s2)) (mul-series s1 (inverse-series s2)))
+        (else (let ((factor (/ 1 (car-stream s2))))
+                (let ((s2-normalize (stream-1-oper (lambda (x) (* x factor)) s2)))
+                  (stream-1-oper (lambda (x) (* x factor)) (mul-series s1 (inverse-series s2-normalize))))))))
+;(display-head (div-series cos-series cos-series) 10)
+;(display-head (div-series cos-series (stream-1-oper (lambda (x) (* x 2)) cos-series)) 10)
+;(display-head (div-series sin-series cos-series) 10)
+
+(define (sqrt-stream x)
+  (define (sqrt-improve guess x)
+    (/ (+ guess (/ x guess)) 2))
+  (define guesses (cons-stream 1.0
+                               (stream-1-oper (lambda (guess) (sqrt-improve guess x)) guesses)))
+  guesses)
+;(display-head (sqrt-stream 2) 10)
+
+(define pi-series (stream-1-oper (lambda (x)
+                                   (cond ((= 2 (remainder (- x 1) 4)) (/ -1 x))
+                                         ((= 0 (remainder (- x 1) 4)) (/ 1 x))
+                                         (else 0)))
+                                 integers))
+(define pi-stream (stream-scale 4.0 (stream-accumulate pi-series)))
+;(stream-ref pi-stream 20)
+
