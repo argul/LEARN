@@ -1,12 +1,22 @@
 #lang racket
 
+(require "math_func.rkt")
+
 ;begin skeleton
 (define (mem-proc proc)
   (let ((executed false) (result false))
     (lambda ()
+      (display "==========================\n")
+      (display executed)
+      (display " ")
+      (display result)
+      (display "\n==========================\n")
       (if (not executed)
           (begin (set! result (proc))
                  (set! executed true)
+                 (display "execute proc: ")
+                 (display proc)
+                 (display " \n")
                  result)
           result))))
 
@@ -77,6 +87,11 @@
         (else (cons-stream (car-stream s2)
                            (stream-merge-comparer comparer s1 (cdr-stream s2))))))
 
+(define (stream-filter proc stream)
+  (if (proc (car-stream stream))
+      (cons-stream (car-stream stream) (stream-filter proc (cdr-stream stream)))
+      (stream-filter proc (cdr-stream stream))))
+
 (define (stream-accumulate stream)
   (define result (cons-stream (car-stream stream)
                               (stream-2-oper + (cdr-stream stream) result)))
@@ -109,15 +124,15 @@
   (cons-stream initial (make-series-stream (step-proc initial) step-proc)))
 ;end extensions
 
-;(define (integers-from n)
-;  (cons-stream n (integers-from (+ n 1))))
-;(define integers (integers-from 1))
+(define (integers-from n)
+  (cons-stream n (integers-from (+ n 1))))
+(define integers (integers-from 1))
 ;(display-stream (stream-head integers 20))
 
 ;begin recursive stream
 (define ones (cons-stream 1 ones))
 ;(display-head ones 10)
-(define integers (cons-stream 1 (stream-2-oper + ones integers)))
+;(define integers (cons-stream 1 (stream-2-oper + ones integers)))
 ;(display-head integers 10)
 ;(display-head (make-series-stream 1 (lambda (x) (* x 2))) 10)
 
@@ -193,6 +208,37 @@
                                          ((= 0 (remainder (- x 1) 4)) (/ 1 x))
                                          (else 0)))
                                  integers))
-(define pi-stream (stream-scale 4.0 (stream-accumulate pi-series)))
+(define pi-stream (stream-scale 4.0 (stream-accumulate (stream-filter (lambda (x) (not (= 0 x))) pi-series))))
 ;(stream-ref pi-stream 20)
 
+(define (euler-accelerate stream)
+  (define (formula s0 s1 s2)
+    (- s2 (/ (pow2 (- s2 s1))
+                          (+ s0 (* -2 s1) s2))))
+  (let ((s0 (stream-ref stream 0))
+        (s1 (stream-ref stream 1))
+        (s2 (stream-ref stream 2)))
+    (cons-stream (formula s0 s1 s2)
+                 (euler-accelerate (cdr-stream stream)))))
+
+;(display-head pi-stream 10)
+;(display-head (euler-accelerate pi-stream) 10)
+
+(define (recursive-euler-accelerate stream)
+  (cons-stream stream
+               (recursive-euler-accelerate (euler-accelerate stream))))
+
+;(display-head (stream-ref (recursive-euler-accelerate pi-stream) 1) 10)
+;(display-head (stream-ref (recursive-euler-accelerate pi-stream) 5) 10)
+
+(define (make-integers-1)
+  (define integers
+    (cons-stream 1
+                 (stream-1-oper (lambda (x) (+ x 1)) integers)))
+  integers)
+
+(define (make-integers-2)
+  (cons-stream 1 (stream-1-oper (lambda (x) (+ x 1)) (make-integers-2))))
+
+;(stream-ref (make-integers-1) 2) ;see how mem-proc is stored and used.
+;(stream-ref (make-integers-2) 2)
