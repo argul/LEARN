@@ -6,17 +6,17 @@
 (define (mem-proc proc)
   (let ((executed false) (result false))
     (lambda ()
-      (display "==========================\n")
-      (display executed)
-      (display " ")
-      (display result)
-      (display "\n==========================\n")
+      ;(display "==========================\n")
+      ;(display executed)
+      ;(display " ")
+      ;(display result)
+      ;(display "\n==========================\n")
       (if (not executed)
           (begin (set! result (proc))
                  (set! executed true)
-                 (display "execute proc: ")
-                 (display proc)
-                 (display " \n")
+                 ;(display "execute proc: ")
+                 ;(display proc)
+                 ;(display " \n")
                  result)
           result))))
 
@@ -110,9 +110,12 @@
       stream
       (stream-tail (cdr-stream stream) (- n 1))))
 
-(define (display-stream stream)
-  (begin (stream-for-each (lambda (x) (begin (display x) (display " "))) stream)
+(define (display-stream2 stream representer)
+  (begin (stream-for-each (lambda (x) (begin (representer x) (display " "))) stream)
          (display "\n")))
+
+(define (display-stream stream)
+  (display-stream2 stream (lambda (x) (display x))))
 
 (define (display-head stream n)
   (display-stream (stream-head stream n)))
@@ -242,3 +245,46 @@
 
 ;(stream-ref (make-integers-1) 2) ;see how mem-proc is stored and used.
 ;(stream-ref (make-integers-2) 2)
+
+(define (make-stream-pair x y)
+  (lambda (operator)
+    (cond ((equal? operator 'car) x)
+          ((equal? operator 'cdr) y)
+          (else (error "unknown operator")))))
+
+(define (stream-pair-car pair)
+  (pair 'car))
+
+(define (stream-pair-cdr pair)
+  (pair 'cdr))
+
+(define (interleave s1 s2); Good but not I want.
+  (if (stream-null? s1)
+      s2
+      (cons-stream (car-stream s1) (interleave s2 (cdr-stream s1)))))
+
+(define (customized-merge s1 s2)
+  (if (< (stream-pair-cdr (car-stream s2)) (stream-pair-cdr (car-stream s1)))
+      (cons-stream (car-stream s2)
+                   (customized-merge s1 (cdr-stream s2)))
+      (cons-stream (car-stream s1)
+                   (customized-merge (cdr-stream s1) s2))))
+
+(define (stream-pairs stream1 stream2 merge-proc)
+  (cons-stream (make-stream-pair (car-stream stream1) (car-stream stream2))
+               (merge-proc (stream-1-oper (lambda (x)
+                                            (make-stream-pair (car-stream stream1) x))
+                                                (cdr-stream stream2))
+                                 (stream-pairs (cdr-stream stream1) (cdr-stream stream2) merge-proc))))
+
+(define (display-pair-stream stream num)
+  (display-stream2 (stream-head stream num) (lambda (x)
+                                              (begin (display "(")
+                                                     (display (stream-pair-car x))
+                                                     (display ",")
+                                                     (display (stream-pair-cdr x))
+                                                     (display ")")))))
+
+(display-pair-stream (stream-pairs integers integers interleave) 20)
+(display-pair-stream (stream-pairs integers integers customized-merge) 20)
+
