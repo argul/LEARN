@@ -277,6 +277,17 @@
                                                 (cdr-stream stream2))
                                  (stream-pairs (cdr-stream stream1) (cdr-stream stream2) merge-proc))))
 
+(define (merge-triple s1 s2);s1 and s2 is [[x, y, z], ....]
+  (let ((t1 (car-stream s1)) (t2 (car-stream s2)))
+    (if (= 
+         (+ (stream-pair-car (stream-pair-car t1)) 
+              (stream-pair-cdr (stream-pair-car t1))) 
+         (* 2 (stream-pair-cdr t2)))
+        (cons-stream t1
+                     (merge-triple (cdr-stream s1) s2))
+        (cons-stream t2
+                     (merge-triple s1 (cdr-stream s2))))))
+
 (define (display-pair-stream stream num)
   (display-stream2 (stream-head stream num) (lambda (x)
                                               (begin (display "(")
@@ -285,6 +296,20 @@
                                                      (display (stream-pair-cdr x))
                                                      (display ")")))))
 
-(display-pair-stream (stream-pairs integers integers interleave) 20)
+;(display-pair-stream (stream-pairs integers integers interleave) 20)
 (display-pair-stream (stream-pairs integers integers customized-merge) 20)
 
+(define (display-triple-stream stream num)
+  (display-stream2 (stream-head stream num) (lambda (x)
+                                              (begin (display "(")
+                                                     (display (stream-pair-car (stream-pair-car x)))
+                                                     (display ",")
+                                                     (display (stream-pair-cdr (stream-pair-car x)))
+                                                     (display ",")
+                                                     (display (stream-pair-cdr x))
+                                                     (display ")")))))
+
+;(set! integers (cdr-stream integers))
+(display-triple-stream (stream-pairs (stream-pairs integers integers customized-merge) 
+                                     integers 
+                                     merge-triple) 20)
