@@ -2,40 +2,29 @@
 
 (require "hash-tab-put-get.rkt")
 (require "eval-self-evaluation.rkt")
-(require "eval-variable-binding.rkt")
+(require "eval-env.rkt")
 (require "eval-quote.rkt")
 
 ;begin utils
-(define (true? x)
-  (not (false? x)))
+(define apply-in-underlying-scheme apply)
 
-(define (false? x)
-  (eq? x 'false))
-
-(define (apply proc args)
-  (cond ((primitive-proc? proc) (apply-primitive-proc proc args))
+(define (apply* proc args)
+  (define (proc-body proc)
+    (cdr proc))
+  (define (proc-parameters proc)
+    'todo)
+  (define (proc-environment proc)
+    'todo)
+  (cond ((primitive? proc) (apply-primitive-procedure proc args))
         ((compound-proc? proc)
-         (eval-sequence (proc-body proc) (extend-environment (proc-parameters proc)
-                                                            args
-                                                            (proc-environment proc))
+         (eval-sequence (proc-body proc) (extend-env (proc-parameters proc)
+                                                     args
+                                                     (proc-environment proc))
           ))
         (else (error "Illegal proc"))))
 
-(define (primitive-proc? proc)
-  'todo)
-
 (define (compound-proc? proc)
   'todo)
-
-(define (apply-primitive-proc proc args)
-  'todo)
-
-(define (apply-generic operator . args)
-  (let ((types (map type-tag args)))
-    (let ((proc (get operator types)) (arguments (map contents args)))
-      (if proc
-          (apply proc arguments)
-          (error "No proc for operator found!")))))
 
 (define (list-of-values exps env)
   (if (no-operands? exps)
@@ -74,6 +63,11 @@
   (list 'if predicate consequent alternative))
 ;end if
 
+;begin SEQUENCE->EXP
+(define (sequence->exp seq)
+  'todo)
+;end
+
 ;begin COND
 (define (cond->if exp)
   (expand-clauses (cdr exp)))
@@ -86,6 +80,8 @@
        (eq? (cadr clause) '=>)))
 
 (define (expand-clauses clauses)
+  (define (cond-actions cond-exp)
+    (cdr cond-exp))
   (if (null? clauses)
       'false
       (let ((first (car clauses))
@@ -96,7 +92,7 @@
                                               (expand-clauses rest)))
               (else (make-if (car first)
                              (sequence->exp (cond-actions first))
-                             (expand-clauses reset)))))))
+                             (expand-clauses rest)))))))
 
 (define (eval-cond exp env)
   (eval (cond->if exp) env))
@@ -143,6 +139,13 @@
   'ok)
 ;end define
 
+;begin LAMBDA
+(define (make-lambda args body)
+  (list 'lambda args body))
+(define (eval-lambda exp env)
+  'todo)
+;end LAMBDA
+
 ;begin LET
 (define (let-args exp)
   (cadr exp))
@@ -161,7 +164,7 @@
     (cons (make-lambda (let-args-variables args) (let-body exp))
           (let-args-values args))))
 (define (eval-let exp env)
-  (eval (let-lambda exp) env))
+  (eval (let->lambda exp) env))
 ;end let
 
 ;begin LET*
@@ -177,6 +180,7 @@
 
 ;begin PROCEDURE
 (define application? pair?)
+(define no-operands? null?)
 (define (get-operator exp) (car exp))
 (define (get-operands exp) (cdr exp))
 (define (first-operand exp) (car exp))
@@ -195,24 +199,53 @@
   (cadddr p))
 ;end procedure
 
+;begin PRIMITIVES
+(define primitive-table (make-table))
+(define (install-primitives)
+  (define p 'primitive)
+  ((primitive-table 'put) p '+ +)
+  ((primitive-table 'put) p '- -)
+  ((primitive-table 'put) p '* *)
+  ((primitive-table 'put) p '/ /)
+  ((primitive-table 'put) p 'car car)
+  ((primitive-table 'put) p 'cdr cdr)
+  ((primitive-table 'put) p 'list list)
+  ((primitive-table 'put) p 'null? null?)
+  ((primitive-table 'put) p 'eq? eq?)
+  ((primitive-table 'put) p '= =)
+  ((primitive-table 'put) p '> >)
+  ((primitive-table 'put) p '< <)
+  ((primitive-table 'put) p 'not not))
+(define (primitive? proc)
+  ((primitive-table 'contains) 'primitive proc))
+(define (apply-primitive-procedure proc args)
+  (apply-in-underlying-scheme ((primitive-table 'get) 'primitive proc) args))
+;end PRIMITIVES
+
 ;begin install handlers
-(put 'op 'quote text-of-quotation)
-(put 'op 'set! eval-assignment)
-(put 'op 'define eval-definition)
-(put 'op 'if eval-if)
-(put 'op 'lambda eval-lambda)
-(put 'op 'begin eval-begin)
-(put 'op 'cond eval-cond)
-(put 'op 'let eval-let)
-(put 'op 'let* eval-let*)
+(define handler-table (make-table))
+(define (put-handler op type proc) 
+  ((handler-table 'put) op type proc))
+(define (get-handler op type)
+  ((handler-table 'get) op type))
+
+(put-handler 'op 'quote text-of-quotation)
+(put-handler 'op 'set! eval-assignment)
+(put-handler 'op 'define eval-definition)
+(put-handler 'op 'if eval-if)
+(put-handler 'op 'lambda eval-lambda)
+(put-handler 'op 'begin eval-sequence)
+(put-handler 'op 'cond eval-cond)
+(put-handler 'op 'let eval-let)
+(put-handler 'op 'let* eval-let*)
 ;end install handlers
 
 ;begin EVAL
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
-        ((get 'op (car exp)) (apply (get 'op (car exp)) exp env))
-        ((application? exp) (apply (eval (get-operator exp) env)
+        ((get-handler 'op (car exp)) (apply* (get-handler 'op (car exp)) exp env))
+        ((application? exp) (apply* (eval (get-operator exp) env)
                                    (list-of-values (get-operands exp) env)))
         (else (error "Unknown exp type -- EVAL" exp))))
 ;end EVAL

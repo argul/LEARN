@@ -1,13 +1,19 @@
 #lang racket
 
-(provide put)
-(provide get)
+(provide make-table)
 
-(define op-table (make-hash))
-(define (put operator type proc)
-  (hash-set! op-table (list operator type) proc))
-(define (get operator type)
-  (hash-ref op-table (list operator type) #f))
+(define (make-table)
+  (let ((tb (make-hash)))
+    (define (put operator type proc)
+      (hash-set! tb (list operator type) proc))
+    (define (get operator type)
+      (hash-ref tb (list operator type) #f))
+    (define (contains operator type)
+      (not (eq? (get operator type) #f)))
+    (lambda (code)
+      (cond ((eq? code 'put) put)
+            ((eq? code 'get) get)
+            ((eq? code 'contains) contains)))))
 
 (define (attach-tag type contents)
   (cons type contents))
