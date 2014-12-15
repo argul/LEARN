@@ -258,6 +258,12 @@
 (define (stream-pair-cdr pair)
   (pair 'cdr))
 
+(define (stream-pair-caar pair)
+  (stream-pair-car (stream-pair-car pair)))
+
+(define (stream-pair-cadr pair)
+  (stream-pair-cdr (stream-pair-car pair)))
+
 (define (interleave s1 s2); Good but not I want.
   (if (stream-null? s1)
       s2
@@ -277,17 +283,6 @@
                                                 (cdr-stream stream2))
                                  (stream-pairs (cdr-stream stream1) (cdr-stream stream2) merge-proc))))
 
-(define (merge-triple s1 s2);s1 and s2 is [[x, y, z], ....]
-  (let ((t1 (car-stream s1)) (t2 (car-stream s2)))
-    (if (= 
-         (+ (stream-pair-car (stream-pair-car t1)) 
-              (stream-pair-cdr (stream-pair-car t1))) 
-         (* 2 (stream-pair-cdr t2)))
-        (cons-stream t1
-                     (merge-triple (cdr-stream s1) s2))
-        (cons-stream t2
-                     (merge-triple s1 (cdr-stream s2))))))
-
 (define (display-pair-stream stream num)
   (display-stream2 (stream-head stream num) (lambda (x)
                                               (begin (display "(")
@@ -299,6 +294,17 @@
 ;(display-pair-stream (stream-pairs integers integers interleave) 20)
 (display-pair-stream (stream-pairs integers integers customized-merge) 20)
 
+(define (comparer-triple t1 t2)
+  (let ((a1 (stream-pair-caar t1)) 
+        (a2 (stream-pair-cadr t1)) 
+        (a3 (stream-pair-cdr t1))
+        (b1 (stream-pair-caar t2)) 
+        (b2 (stream-pair-cadr t2)) 
+        (b3 (stream-pair-cdr t2)))
+    (or (not (> a3 b3))
+        (not (> (+ a1 a2 a3) (+ b1 b2 b3)))
+        (not (> (+ (- a3 a2) (- a2 a1)) (+ (- b3 b2) (- b2 b1)))))))
+     
 (define (display-triple-stream stream num)
   (display-stream2 (stream-head stream num) (lambda (x)
                                               (begin (display "(")
@@ -309,7 +315,8 @@
                                                      (display (stream-pair-cdr x))
                                                      (display ")")))))
 
-;(set! integers (cdr-stream integers))
 (display-triple-stream (stream-pairs (stream-pairs integers integers customized-merge) 
-                                     integers 
-                                     merge-triple) 20)
+                                     integers
+                                     (lambda (s1 s2)
+                                       (stream-merge-comparer comparer-triple s1 s2))) 20)
+

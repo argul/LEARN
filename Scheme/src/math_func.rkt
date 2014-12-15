@@ -268,8 +268,7 @@
 (define (test-runtime-prime n)
   (cond ((= 0 n) true)
         (else (test-prime (+ 1 (* 2 (random 1000))))
-              (test-runtime-prime (- n 1)))
-        ))
+              (test-runtime-prime (- n 1)))))
 
 
 ;(test-runtime-prime 20)
