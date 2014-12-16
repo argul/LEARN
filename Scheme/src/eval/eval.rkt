@@ -9,18 +9,17 @@
 (define apply-in-underlying-scheme apply)
 
 (define (apply* proc args)
-  (define (proc-body proc)
-    (cdr proc))
   (define (proc-parameters proc)
-    'todo)
+    (cadr proc))
+  (define (proc-body proc)
+    (caddr proc))
   (define (proc-environment proc)
-    'todo)
+    (cadddr proc))
   (cond ((primitive? proc) (apply-primitive-procedure proc args))
         ((compound-proc? proc)
          (eval-sequence (proc-body proc) (extend-env (proc-parameters proc)
                                                      args
-                                                     (proc-environment proc))
-          ))
+                                                     (proc-environment proc))))
         (else (error "Illegal proc"))))
 
 (define (compound-proc? proc)
@@ -173,9 +172,9 @@
 (define (eval-let* exp env)
   (eval (let*->let (let-args exp) (let-body exp)) env))
 (define (let*->let args body)
-    (if (null? args)
-        body
-        (make-let (list (car args)) (let*->let (cdr args) body))))
+  (if (null? args)
+      body
+      (make-let (list (car args)) (let*->let (cdr args) body))))
 ;end let
 
 ;begin PROCEDURE
@@ -246,6 +245,6 @@
         ((variable? exp) (lookup-variable-value exp env))
         ((get-handler 'op (car exp)) (apply* (get-handler 'op (car exp)) exp env))
         ((application? exp) (apply* (eval (get-operator exp) env)
-                                   (list-of-values (get-operands exp) env)))
+                                    (list-of-values (get-operands exp) env)))
         (else (error "Unknown exp type -- EVAL" exp))))
 ;end EVAL
