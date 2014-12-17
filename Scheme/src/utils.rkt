@@ -1,10 +1,12 @@
 #lang racket
 
 (provide print)
-(provide print2)
 
-(define (print n)
-  (display n)(newline))
-
-(define (print2 n m)
-  (display n)(display "  ")(display m)(newline))
+(define (print . args)
+  (define (print-inner list)
+    (if (null? list)
+        (newline)
+        (begin (display (car list))
+               (display " ")
+               (print-inner (cdr list)))))
+  (print-inner args))

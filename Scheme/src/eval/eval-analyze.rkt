@@ -4,22 +4,14 @@
 
 ;region CORE
 (define (eval exp env)
-  (cond ((self-evaluating? exp) exp);; 1 => 1
-        ((variable? exp) (seek-variable exp env));; a => seek value binded to 'a' in env
-        ((contains-handler (car exp)) ((get-handler (car exp)) exp env));; built-in keywords/pattens
-        ((application? exp) (apply* (eval (get-operator exp) env);; procedure invocation (a b c) => (apply a (b c)) 
-                                    (eval-args (get-args exp) env)))
-        (else (error "Unknown exp type -- EVAL" exp))))
+  ((analyze exp) env))
 
-(define (apply* proc args)
-  ;(print "apply*" proc args)
-  (cond ((primitive? proc) (apply-primitive-procedure proc args))
-        ((compound-proc? proc) ; eval-sequence body here is the most critical word.
-         (print proc)
-         (eval-sequence (proc-body proc) (extend-env (proc-parameters proc)
-                                                     args
-                                                     (proc-environment proc))))
-        (else (error "Illegal proc"))))
+(define (analyze exp)
+  (cond ((self-evaluating? exp) (analyze-self-evaluating exp))
+        ((variable? exp) (analyze-variable exp))
+        ((contains-handler (car exp)) ((get-handler (car exp)) exp))
+        ((application? exp) (analyze-application exp))
+        (else (error "Unknown exp type -- EVAL" exp))))
 
 ;; (a b c) => (apply a (b c))
 (define (get-operator exp)
@@ -49,6 +41,22 @@
       '()
       (cons (eval (car args) env)
             (eval-args (cdr args) env))))
+
+
+(define (analyze-application exp)
+  (let ((opproc (analyze (get-operator exp)))
+        (argproc-list (map analyze (get-args exp))))
+    (lambda (env)
+      (execute-application (opproc env)
+                           (map (lambda (proc) (proc env)) argproc-list)))))
+
+(define (execute-application proc args)
+  (cond ((primitive? proc) (apply-primitive-procedure proc args))
+        ((compound-proc? proc)
+         (print proc)
+         ((proc-body proc) (extend-env (proc-parameters proc)
+                                       args
+                                       (proc-environment proc))))))
 ;end region
 
 ;regin HANDLERS DICTIONARY
@@ -132,15 +140,21 @@
   (cond ((number? exp) true)
         ((string? exp) true)
         (else false)))
+
+(define (analyze-self-evaluating exp)
+  (lambda (env) exp))
 ;end region
 
 ;region symbol
 (define variable? symbol?)
+(define (analyze-variable exp)
+  (lambda (env) (seek-variable exp env)))
 ;end region
 
 ;regin quote
-(define (eval-quote exp env)
-  (cadr exp))
+(define (analyze-quote exp)
+  (let ((qval (cadr exp)))
+    (lambda (exp) qval)))
 ;end region
 
 ;region IF
@@ -153,35 +167,47 @@
       (cadddr exp)
       'false))
 
-(define (eval-if exp env)
-  (if (eval (if-predicate exp) env)
-      (eval (if-consequent exp) env)
-      (eval (if-alternative exp) env)))
+(define (analyze-if exp)
+  (let ((pproc (analyze (if-predicate exp)))
+        (cproc (analyze (if-consequent exp)))
+        (aproc (analyze (if-alternative exp))))
+    (lambda (env)
+      (if (pproc env)
+          (cproc env)
+          (aproc env)))))
 
 (define (make-if predicate consequent alternative)
   (list 'if predicate consequent alternative))
 ;end region
 
 ;region SEQUENCE
+(define (analyze-sequence exp-list)
+  (define (make-lambda-sequence proc1 proc2)
+    (lambda (env)
+      (proc1 env)
+      (proc2 env)))
+  (define (make-lambda-loop first rest)
+    (if (null? rest)
+        first
+        (make-lambda-loop (make-lambda-sequence first (car rest)) (cdr rest))
+        ;(make-lambda-sequence first (make-lambda-loop (car rest) (cdr rest)))
+        ))
+  (let ((proc-list (map analyze exp-list)))
+    (make-lambda-loop (car proc-list) (cdr proc-list))))
+
 (define (make-begin seq) (list 'begin seq))
-(define (get-sequence exp)
-  (cdr exp))
 (define (last-item? seq) (null? (cdr seq)))
 (define (first-item seq) (car seq))
-(define (rest-seq seq) (cdr seq))
-
-(define (eval-sequence seq env)
-  (cond ((last-item? seq) (eval (first-item seq) env))
-        (else (eval (first-item seq) env)
-              (eval-sequence (rest-seq seq) env))))
-
-(define (eval-begin exp env)
-  (eval-sequence (get-sequence exp) env))
+(define (get-sequence exp)
+  (cdr exp))
 
 (define (sequence->exp seq)
   (cond ((null? seq) seq)
         ((last-item? seq) (first-item seq))
         (else (make-begin seq))))
+
+(define (analyze-begin exp)
+  (analyze-sequence (get-sequence exp)))
 ;end region
 
 ;region COND
@@ -210,18 +236,19 @@
                              (sequence->exp (cond-actions first))
                              (expand-clauses rest)))))))
 
-(define (eval-cond exp env)
-  (eval (cond->if exp) env))
+(define (analyze-cond exp)
+  (analyze (cond->if exp)))
 ;end region
 
 ;region ASSIGNMENT
-(define (eval-assignment exp env)
+(define (analyze-assignment exp)
   (define (assignment-variable exp) (cadr exp))
   (define (assignment-value exp) (caddr exp))
-  (set-variable-value! (assignment-variable exp)
-                       (eval (assignment-value exp) env)
-                       env)
-  'ok)
+  (let ((var (assignment-variable exp))
+        (value-proc (analyze (assignment-value exp))))
+    (lambda (env)
+      (set-variable-value! var (value-proc env) env)
+      'ok)))
 ;end region
 
 ;region DEFINE
@@ -236,11 +263,13 @@
       (caddr exp)
       (make-lambda (cdadr exp)
                    (caddr exp))))
-(define (eval-definition exp env)
-  (set-variable-value! (definition-variable exp)
-                       (eval (definition-value exp) env) ; eval-lambda
-                       env)
-  'ok)
+(define (analyze-definition exp)
+  (let ((var (definition-variable exp))
+        (value-proc (analyze (definition-value exp))))
+    (lambda (env)
+      (set-variable-value! var (value-proc env) env)
+      'ok)))
+
 ;end region
 
 ;region LAMBDA
@@ -251,10 +280,10 @@
   (cadr exp))
 (define (lambda-body exp)
   (cddr exp))
-(define (eval-lambda exp env)
-  (make-procedure (lambda-args exp)
-                  (lambda-body exp)
-                  env))
+(define (analyze-lambda exp)
+  (let ((vars (lambda-args exp))
+        (proc (analyze-sequence (lambda-body exp))))
+    (lambda (env) (make-procedure vars proc env))))
 ;end region
 
 ;region LET
@@ -274,19 +303,19 @@
   (let ((args (let-args exp)))
     (cons (make-lambda (let-args-variables args) (let-body exp))
           (let-args-values args))))
-(define (eval-let exp env)
-  (eval (let->lambda exp) env))
+(define (analyze-let exp)
+  (analyze (let->lambda exp)))
 ;end region
 
 ;region LET*
 (define (make-let args body)
   (list 'let args body))
-(define (eval-let* exp env)
-  (eval (let*->let (let-args exp) (let-body exp)) env))
 (define (let*->let args body)
   (if (null? args)
       body
       (make-let (list (car args)) (let*->let (cdr args) body))))
+(define (analyze-let* exp)
+  (analyze (let*->let (let-args exp) (let-body exp))))
 ;end region
 
 ;region PRIMITIVES
@@ -319,15 +348,15 @@
 ;end region
 
 ;region REGISTER HANDLERS
-(put-handler 'quote eval-quote)
-(put-handler 'set! eval-assignment)
-(put-handler 'define eval-definition)
-(put-handler 'if eval-if)
-(put-handler 'lambda eval-lambda)
-(put-handler 'begin eval-begin)
-(put-handler 'cond eval-cond)
-(put-handler 'let eval-let)
-(put-handler 'let* eval-let*)
+(put-handler 'quote analyze-quote)
+(put-handler 'set! analyze-assignment)
+(put-handler 'define analyze-definition)
+(put-handler 'if analyze-if)
+(put-handler 'lambda analyze-lambda)
+(put-handler 'begin analyze-begin)
+(put-handler 'cond analyze-cond)
+(put-handler 'let analyze-let)
+(put-handler 'let* analyze-let*)
 ;end region
 
 ;region INITIAL ENVIRONMENT
