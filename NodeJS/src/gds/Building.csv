@@ -1,0 +1,9 @@
+id,	name,	level,	flt, 	dep
+int,	string,	int,	float,	int[]
+1,	0, 	0, 	0,	0
+# test comments
+1,	b1,	1,	0.2,	2|3|4|5
+# test comments
+# test comments
+2,	b1,	2,	0.3,	2|3
+3,	b1,	3,	0.4,	4
