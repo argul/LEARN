@@ -1,0 +1,2381 @@
+cscope 15 $HOME/SkeletionKing/NodeJS/src -q 0000000172 0000011043
+	@diagram_router.js
+
+2 
+funùiÚ
+ 
+	$dumpObj
+(
+obj
+)
+
+4 ià(
+	`is_undefšed
+(
+obj
+))
+
+10  
+obj
+.
+	`toSŒšg
+();
+
+12 
+	}
+}
+
+14 
+funùiÚ
+ 
+	$is_¬¿y
+(
+¬r
+)
+
+16  
+Objeù
+.
+´ÙÙy³
+.
+toSŒšg
+.
+	`ÿÎ
+(
+¬r
+) === '[object Array]';
+
+17 
+	}
+}
+
+19 
+funùiÚ
+ 
+	$is_undefšed
+(
+ªy
+)
+
+21  (
+	`ty³of
+(
+ªy
+) == "undefined");
+
+22 
+	}
+}
+
+24 
+funùiÚ
+ 
+	$is_node_id
+(
+ªy
+)
+
+26  (
+	`ty³of
+(
+ªy
+) == "string");
+
+27 
+	}
+}
+
+29 
+funùiÚ
+ 
+	$is_node
+(
+node
+)
+
+31 ià(!
+	`is_node_id
+(
+node
+.
+id
+)è{  
+çl£
+; }
+
+32 ià(
+	`is_undefšed
+(
+node
+.
+»achabË_¬¿y
+)è{  
+çl£
+; }
+
+34  
+Œue
+;
+
+35 
+	}
+}
+
+37 
+funùiÚ
+ 
+	$”rÜ_hªdËr
+(
+”rÜ_msg
+)
+
+39 
+cÚsŞe
+.
+	`log
+(
+”rÜ_msg
+);
+
+40 
+v¬
+ 
+”r
+ = 
+Ãw
+ 
+	`E¼Ü
+();
+
+41 
+cÚsŞe
+.
+	`log
+(
+”r
+.
+¡ack
+);
+
+43 
+throw
+ 
+”r
+;
+
+44 
+	}
+}
+
+46 
+funùiÚ
+ 
+	$¬¿y_fÜ—ch
+(
+¬r
+, 
+´oc
+)
+
+48 ià(!
+	`is_¬¿y
+(
+¬r
+))
+
+50 
+	`”rÜ_hªdËr
+("šv®id‡¼ay! " + 
+	`dumpObj
+(
+¬r
+));
+
+52 
+v¬
+ 
+Ën
+ = 
+¬r
+.
+Ëngth
+;
+
+53 
+v¬
+ 
+i
+ = 0; i < 
+Ën
+; ++i)
+
+55 
+	`´oc
+(
+¬r
+[
+i
+]);
+
+57 
+	}
+}
+
+59 
+funùiÚ
+ 
+	$diù_fÜ—ch
+(
+diù
+, 
+´oc
+)
+
+61 
+v¬
+ 
+key
+ 
+š
+ 
+diù
+)
+
+63 ià(
+diù
+.
+	`hasOwnPrİ”ty
+(
+key
+))
+
+65 
+	`´oc
+(
+key
+, 
+diù
+[key]);
+
+68 
+	}
+}
+
+70 
+funùiÚ
+ 
+	$make_cÚ‹xt
+()
+
+72 
+v¬
+ 
+ùx
+ = 
+Ãw
+ 
+	`Objeù
+();
+
+73 
+ùx
+.
+”rÜ_hªdËr
+ =ƒrror_handler;
+
+74 
+ùx
+.
+is_¬¿y
+ = is_array;
+
+75 
+ùx
+.
+is_undefšed
+ = is_undefined;
+
+76 
+ùx
+.
+is_node
+ = is_node;
+
+78 
+v¬
+ 
+m­
+ = {};
+
+79 
+v¬
+ 
+g‘_node_´oc
+ = 
+	`funùiÚ
+(
+id
+)
+
+81 
+v¬
+ 
+key
+ = 
+id
+.
+	`toSŒšg
+();
+
+82  
+m­
+[
+id
+];
+
+85 
+v¬
+ 
+add_node_´oc
+ = 
+	`funùiÚ
+(
+node
+)
+
+87 ià(!
+	`is_node
+(
+node
+))
+
+89 
+	`”rÜ_hªdËr
+("šv®id‚ode! " + 
+	`dumpObj
+(
+node
+));
+
+91 ià(!
+	`is_undefšed
+(
+	`g‘_node_´oc
+(
+node
+.
+id
+)))
+
+93 
+	`”rÜ_hªdËr
+("du¶iÿ‹‚ode! " + 
+	`dumpObj
+(
+node
+));
+
+95 
+m­
+[
+node
+.
+id
+] =‚ode;
+
+98 
+ùx
+.
+g‘_node
+ = 
+g‘_node_´oc
+;
+
+99 
+ùx
+.
+add_node
+ = 
+add_node_´oc
+;
+
+101 
+ùx
+.
+¡¬t_id
+ = 
+undefšed
+;
+
+102 
+ùx
+.
+’d_id
+ = 
+undefšed
+;
+
+104 
+ùx
+.
+»suÉ
+ = [];
+
+106  
+ùx
+;
+
+107 
+	}
+}
+
+109 
+funùiÚ
+ 
+	$š™_cÚ‹xt
+(
+ùx
+, 
+node_¬¿y
+, 
+id_¡¬t
+, 
+id_’d
+, 
+di¡ªû_ev®u©Ü
+)
+
+111 ià(!
+ùx
+.
+	`is_¬¿y
+(
+node_¬¿y
+))
+
+113 
+ùx
+.
+	`”rÜ_hªdËr
+("invalid input‚ode_array!‚ot‡rray form.");
+
+115 
+	`¬¿y_fÜ—ch
+(
+node_¬¿y
+, 
+	`funùiÚ
+ (
+node
+è{ 
+ùx
+.
+	`add_node
+(node); });
+
+117 ià(
+ùx
+.
+	`is_undefšed
+(ùx.
+	`g‘_node
+(
+id_¡¬t
+))
+
+118 || 
+ùx
+.
+	`is_undefšed
+(ùx.
+	`g‘_node
+(
+id_’d
+)))
+
+120 
+ùx
+.
+	`”rÜ_hªdËr
+("šv®id”mš®s! " + ctx.
+	`dumpObj
+(
+id_¡¬t
+è+ "|" + ctx.dumpObj(
+id_’d
+));
+
+123 
+ùx
+.
+¡¬t_id
+ = 
+id_¡¬t
+;
+
+124 
+ùx
+.
+’d_id
+ = 
+id_’d
+;
+
+126 
+ùx
+.
+»suÉ
+ = 
+undefšed
+;
+
+128 
+ùx
+.
+di¡ªû_ev®u©Ü
+ = distance_evaluator;
+
+129 
+	}
+}
+
+132 
+funùiÚ
+ 
+	$dŸg¿m_rou‹r
+(
+node_¬¿y
+, 
+id_¡¬t
+, 
+id_’d
+, 
+di¡ªû_ev®u©Ü
+)
+
+134 
+v¬
+ 
+ùx
+ = 
+	`make_cÚ‹xt
+();
+
+135 
+	`š™_cÚ‹xt
+(
+ùx
+, 
+node_¬¿y
+, 
+id_¡¬t
+, 
+id_’d
+, 
+di¡ªû_ev®u©Ü
+);
+
+136 
+	`do_dŸg¿m_rou‹r
+(
+ùx
+);
+
+137  
+ùx
+.
+»suÉ
+;
+
+138 
+	}
+}
+
+140 
+funùiÚ
+ 
+	$do_dŸg¿m_rou‹r
+(
+ùx
+)
+
+142 
+v¬
+ 
+’v
+ = {};
+
+143 
+’v
+.
+İ’ed
+ = {};
+
+144 
+’v
+.
+is_İ’ed
+ = 
+	`funùiÚ
+ (
+id
+)
+
+146  !
+ùx
+.
+	`is_undefšed
+(
+’v
+.
+İ’ed
+[
+id
+]);
+
+148 
+’v
+.
+»move_äom_İ’ed
+ = 
+	`funùiÚ
+ (
+id
+)
+
+150 
+d–‘e
+ 
+’v
+.
+İ’ed
+[
+id
+];
+
+152 
+’v
+.
+add_to_İ’ed
+ = 
+	`funùiÚ
+ (
+id
+, 
+node
+)
+
+154 
+’v
+.
+İ’ed
+[
+id
+] = 
+node
+;
+
+157 
+’v
+.
+şo£d
+ = {};
+
+158 
+’v
+.
+is_şo£d
+ = 
+	`funùiÚ
+ (
+id
+)
+
+160  !
+ùx
+.
+	`is_undefšed
+(
+’v
+.
+şo£d
+[
+id
+]);
+
+162 
+’v
+.
+add_to_şo£d
+ = 
+	`funùiÚ
+ (
+id
+, 
+node
+)
+
+164 
+’v
+.
+şo£d
+[
+id
+] = 
+node
+;
+
+167 
+’v
+.
+·th_šfo
+ = {};
+
+168 
+’v
+.
+cu¼’t_id
+ = 
+undefšed
+;
+
+170 
+	`rou‹r_¡¬tup
+(
+ùx
+, 
+’v
+);
+
+172 
+ùx
+.
+	`is_undefšed
+(
+’v
+.
+·th_šfo
+[ùx.
+’d_id
+])
+
+173 && !
+ùx
+.
+	`is_undefšed
+(
+’v
+.
+cu¼’t_id
+))
+
+175 
+	`rou‹r_¡•
+(
+ùx
+, 
+’v
+);
+
+178 
+ùx
+.
+»suÉ
+ = 
+	`rou‹r_»suÉ
+(ùx, 
+’v
+);
+
+182 
+’v
+ = 
+nuÎ
+;
+
+183 
+	}
+}
+
+185 
+funùiÚ
+ 
+	$make_·th_šfo
+(
+·»Á
+, 
+di¡ªû
+, 
+ev®u©ed_demªd
+)
+
+187 
+v¬
+ 
+šfo
+ = {};
+
+188 
+šfo
+.
+·»Á
+ =…arent;
+
+189 
+šfo
+.
+di¡ªû
+ = distance;
+
+190 
+šfo
+.
+ev®u©ed_demªd
+ =ƒvaluated_demand;
+
+191 
+šfo
+.
+g‘_e¡im©ed_di¡ªû
+ = 
+	`funùiÚ
+()
+
+193  
+šfo
+.
+di¡ªû
+ + info.
+ev®u©ed_demªd
+;
+
+196  
+šfo
+;
+
+197 
+	}
+}
+
+199 
+funùiÚ
+ 
+	$rou‹r_¡¬tup
+(
+ùx
+, 
+’v
+)
+
+201 
+’v
+.
+	`add_to_İ’ed
+(
+ùx
+.
+¡¬t_id
+, ctx.
+	`g‘_node
+(ctx.start_id));
+
+202 
+’v
+.
+cu¼’t_id
+ = 
+ùx
+.
+¡¬t_id
+;
+
+204 
+’v
+.
+·th_šfo
+[’v.
+cu¼’t_id
+] = 
+	`make_·th_šfo
+(
+undefšed
+, 0, 0);
+
+205 
+	}
+}
+
+207 
+funùiÚ
+ 
+	$rou‹r_¡•
+(
+ùx
+, 
+’v
+)
+
+209 
+v¬
+ 
+node
+ = 
+ùx
+.
+	`g‘_node
+(
+’v
+.
+cu¼’t_id
+);
+
+210 
+v¬
+ 
+cu¼’t_·th_šfo
+ = 
+’v
+.
+·th_šfo
+[’v.
+cu¼’t_id
+];
+
+212 
+	`¬¿y_fÜ—ch
+(
+node
+.
+»achabË_¬¿y
+, 
+	`funùiÚ
+ (
+»achabË
+)
+
+214 
+v¬
+ 
+weight
+ = 
+ùx
+.
+	`is_undefšed
+(
+node
+.
+weights
+è? 1 :‚ode.weights[
+»achabË
+.
+id
+];
+
+218 ià(
+’v
+.
+	`is_şo£d
+(
+»achabË
+.
+id
+)) { ; }
+
+219 ià(
+’v
+.
+	`is_İ’ed
+(
+»achabË
+.
+id
+))
+
+221 
+v¬
+ 
+n
+ = 
+’v
+.
+İ’ed
+[
+»achabË
+.
+id
+];
+
+222 
+v¬
+ 
+di¡ªû
+ = 
+cu¼’t_·th_šfo
+.di¡ªû + 
+weight
+;
+
+223 
+v¬
+ 
+e¡im©e
+ = 
+di¡ªû
+ + 
+ùx
+.
+	`di¡ªû_ev®u©Ü
+(
+»achabË
+.
+id
+, ctx.
+’d_id
+);
+
+225 
+v¬
+ 
+¢ifãr_·th_šfo
+ = 
+’v
+.
+·th_šfo
+[
+»achabË
+.
+id
+];
+
+226 ià(
+¢ifãr_·th_šfo
+.
+	`g‘_e¡im©ed_di¡ªû
+(è>ğ
+e¡im©e
+)
+
+228 
+¢ifãr_·th_šfo
+.
+·»Á
+ = 
+node
+.
+id
+;
+
+229 
+¢ifãr_·th_šfo
+.
+di¡ªû
+ = distance;
+
+234 
+v¬
+ 
+Ãw_šfo
+ = 
+	`make_·th_šfo
+(
+node
+.
+id
+,
+
+235 
+weight
+ + 
+cu¼’t_·th_šfo
+.
+di¡ªû
+,
+
+236 
+ùx
+.
+	`di¡ªû_ev®u©Ü
+(
+»achabË
+.
+id
+, ctx.
+’d_id
+));
+
+238 
+’v
+.
+·th_šfo
+[
+»achabË
+.
+id
+] = 
+Ãw_šfo
+;
+
+239 
+’v
+.
+	`add_to_İ’ed
+(
+»achabË
+.
+id
+,„eachable);
+
+243 
+’v
+.
+	`»move_äom_İ’ed
+(
+node
+.
+id
+);
+
+244 
+’v
+.
+	`add_to_şo£d
+(
+node
+.
+id
+,‚ode);
+
+246 
+	`pickup_Ãxt_checkpošt
+(
+ùx
+, 
+’v
+);
+
+247 
+	}
+}
+
+249 
+funùiÚ
+ 
+	$rou‹r_»suÉ
+(
+ùx
+, 
+’v
+)
+
+251 
+v¬
+ 
+»suÉ
+ = 
+undefšed
+;
+
+252 ià(
+ùx
+.
+	`is_undefšed
+(
+’v
+.
+·th_šfo
+[ùx.
+’d_id
+]))
+
+254 
+»suÉ
+ = ["not„eachable"];
+
+258 
+»suÉ
+ = [];
+
+259 
+v¬
+ 
+rou‹r_id
+ = 
+ùx
+.
+’d_id
+;
+
+262 
+»suÉ
+.
+	`push
+(
+rou‹r_id
+);
+
+263 
+rou‹r_id
+ = 
+’v
+.
+·th_šfo
+[rou‹r_id].
+·»Á
+;
+
+264 } !
+ùx
+.
+	`is_undefšed
+(
+rou‹r_id
+));
+
+266  
+»suÉ
+;
+
+267 
+	}
+}
+
+269 
+funùiÚ
+ 
+	$pickup_Ãxt_checkpošt
+(
+ùx
+, 
+’v
+)
+
+271 
+v¬
+ 
+rg‘_id
+ = 
+undefšed
+;
+
+272 
+	`diù_fÜ—ch
+(
+’v
+.
+İ’ed
+, 
+	`funùiÚ
+ (
+id
+, 
+node
+)
+
+274 ià(
+ùx
+.
+	`is_undefšed
+(
+rg‘_id
+))
+
+276 
+rg‘_id
+ = 
+id
+;
+
+280 ià(
+’v
+.
+·th_šfo
+[
+rg‘_id
+].
+	`g‘_e¡im©ed_di¡ªû
+(è>ƒnv.·th_šfo[
+id
+].get_estimated_distance())
+
+282 
+rg‘_id
+ = 
+id
+;
+
+286 
+’v
+.
+cu¼’t_id
+ = 
+rg‘_id
+;
+
+287 
+	}
+}
+
+290 
+funùiÚ
+ 
+	$¬¿y_to_diù
+(
+¬¿y
+)
+
+292 
+v¬
+ 
+diù
+ = {};
+
+293 
+	`¬¿y_fÜ—ch
+(
+¬¿y
+, 
+	`funùiÚ
+(
+obj
+)
+
+295 
+diù
+[
+obj
+.
+	`toSŒšg
+()] = 
+Œue
+;
+
+297  
+diù
+;
+
+298 
+	}
+}
+
+300 
+funùiÚ
+ 
+	$g’”©e_node_¬¿y
+(
+width
+, 
+height
+, 
+w®ls
+, 
+hŞes
+)
+
+302 
+v¬
+ 
+make_id
+ = 
+	`funùiÚ
+(
+fœ¡
+, 
+£cÚd
+)
+
+304  
+fœ¡
+ + ":" + 
+£cÚd
+;
+
+307 
+v¬
+ 
+node_¬¿y
+ = [];
+
+308 
+v¬
+ 
+node_diù
+ = {};
+
+310 
+v¬
+ 
+hŞe_diù
+ = 
+	`¬¿y_to_diù
+(
+hŞes
+);
+
+311 
+v¬
+ 
+w®l_diù
+ = 
+	`¬¿y_to_diù
+(
+w®ls
+);
+
+313 
+v¬
+ 
+i
+ = 1; i <ğ
+height
+; ++i)
+
+315 
+v¬
+ 
+j
+ = 1; j <ğ
+width
+; ++j)
+
+317 
+v¬
+ 
+node_id
+ = 
+	`make_id
+(
+i
+, 
+j
+);
+
+318 ià(
+Œue
+ =ğ
+hŞe_diù
+[
+node_id
+])
+
+322 
+v¬
+ 
+n
+ = { 
+id
+ : 
+node_id
+ };
+
+323 
+node_¬¿y
+.
+	`push
+(
+n
+);
+
+324 
+n
+.
+»achabË_¬¿y
+ = [];
+
+325 
+node_diù
+[
+n
+.
+id
+] =‚;
+
+329 
+v¬
+ 
+f‹r
+ = 
+	`funùiÚ
+(
+key
+, 
+check_x
+, 
+check_y
+)
+
+331 
+v¬
+ 
+check_id
+ = 
+	`make_id
+(
+check_x
+, 
+check_y
+);
+
+332 ià(
+check_x
+ <ğ0 || check_x > 
+height
+è{  
+çl£
+; }
+
+333 ià(
+check_y
+ <ğ0 || check_y > 
+width
+è{  
+çl£
+; }
+
+335 ià(
+Œue
+ =ğ
+hŞe_diù
+[
+check_id
+])
+
+337  
+çl£
+;
+
+339 ià(
+Œue
+ =ğ
+w®l_diù
+[
+key
+ + "|" + 
+check_id
+])
+
+341  
+çl£
+;
+
+343 ià(
+Œue
+ =ğ
+w®l_diù
+[
+check_id
+ + "|" + 
+key
+])
+
+345  
+çl£
+;
+
+347  
+Œue
+;
+
+350 
+	`¬¿y_fÜ—ch
+(
+node_¬¿y
+, 
+	`funùiÚ
+(
+node
+)
+
+352 
+v¬
+ 
+xy
+ = 
+node
+.
+id
+.
+	`¥l™
+(":");
+
+353 
+v¬
+ 
+x
+ = 
+	`Numb”
+(
+xy
+[0]);
+
+354 
+v¬
+ 
+y
+ = 
+	`Numb”
+(
+xy
+[1]);
+
+355 
+v¬
+ 
+ÿndid©es
+ =
+
+356 [[
+node
+.
+id
+, 
+x
++1, 
+y
+],
+
+357 [
+node
+.
+id
+, 
+x
+-1, 
+y
+],
+
+358 [
+node
+.
+id
+, 
+x
+, 
+y
++1],
+
+359 [
+node
+.
+id
+, 
+x
+, 
+y
+-1]];
+
+360 
+	`¬¿y_fÜ—ch
+(
+ÿndid©es
+, 
+	`funùiÚ
+ (
+·œ
+)
+
+363 
+v¬
+ 
+is_v®id
+ = 
+	`f‹r
+(
+·œ
+[0],…air[1],…air[2]);
+
+364 ià(
+is_v®id
+)
+
+366 
+v¬
+ 
+rg‘_node
+ = 
+node_diù
+[
+	`make_id
+(
+·œ
+[1],…air[2])];
+
+367 
+node
+.
+»achabË_¬¿y
+.
+	`push
+(
+rg‘_node
+);
+
+372  
+node_¬¿y
+;
+
+373 
+	}
+}
+
+375 
+v¬
+ 
+	g‹¡_node_¬¿y
+ = 
+undefšed
+;
+
+376 
+v¬
+ 
+	g¡¬t
+ = 
+undefšed
+;
+
+377 
+v¬
+ 
+	g’d
+ = 
+undefšed
+;
+
+379 (
+	$funùiÚ
+()
+
+381 
+v¬
+ 
+n11
+ = { 
+id
+ : "1:1" };
+
+382 
+v¬
+ 
+n12
+ = { 
+id
+ : "1:2" };
+
+383 
+v¬
+ 
+n21
+ = { 
+id
+ : "2:1" };
+
+384 
+v¬
+ 
+n22
+ = { 
+id
+ : "2:2" };
+
+385 
+n11
+.
+»achabË_¬¿y
+ = [
+n12
+, 
+n21
+];
+
+386 
+n12
+.
+»achabË_¬¿y
+ = [
+n11
+, 
+n22
+];
+
+387 
+n21
+.
+»achabË_¬¿y
+ = [
+n11
+, 
+n22
+];
+
+388 
+n22
+.
+»achabË_¬¿y
+ = [
+n12
+, 
+n21
+];
+
+389 
+‹¡_node_¬¿y
+ = [
+n11
+, 
+n12
+, 
+n21
+, 
+n22
+];
+
+390 
+¡¬t
+ = "1:1";
+
+391 
+’d
+ = "2:2";
+
+394 
+	}
+})();
+
+397 (
+	$funùiÚ
+(){
+
+398 
+v¬
+ 
+width
+ = 8;
+
+399 
+v¬
+ 
+height
+ = 4;
+
+400 
+v¬
+ 
+w®ls
+ = ["4:2|3:2", "3:2|3:3", "2:2|2:3", "2:3|1:3", "2:4|1:4", "2:4|2:5", "3:4|3:5", "4:5|3:5", "3:5|2:5", "3:6|2:6", "1:5|1:6", "2:6|1:6", "1:6|1:7"];
+
+401 
+v¬
+ 
+hŞes
+ = ["3:7", "3:4"];
+
+402 
+‹¡_node_¬¿y
+ = 
+	`g’”©e_node_¬¿y
+(
+width
+, 
+height
+, 
+w®ls
+, 
+hŞes
+);
+
+404 
+¡¬t
+ = "1:1";
+
+405 
+’d
+ = "1:6";
+
+408 
+	}
+})();
+
+410 
+funùiÚ
+ 
+	$glob®_‹¡
+()
+
+412 
+v¬
+ 
+»suÉ
+ = 
+	`dŸg¿m_rou‹r
+(
+‹¡_node_¬¿y
+, 
+¡¬t
+, 
+’d
+, 
+	`funùiÚ
+ (
+id1
+, 
+id2
+)
+
+414 
+v¬
+ 
+coÜd1
+ = 
+id1
+.
+	`¥l™
+(":");
+
+415 
+v¬
+ 
+coÜd2
+ = 
+id2
+.
+	`¥l™
+(":");
+
+416  
+M©h
+.
+	`abs
+(
+	`Numb”
+(
+coÜd1
+[0]è- Numb”(
+coÜd2
+[0])) + Math.abs(Number(coord1[1]) - Number(coord2[1]));
+
+419 
+	`¬¿y_fÜ—ch
+(
+»suÉ
+, 
+	`funùiÚ
+(
+obj
+)
+
+421 
+cÚsŞe
+.
+	`log
+(
+obj
+.
+	`toSŒšg
+() + " , ");
+
+423 
+	}
+}
+
+426 
+glob®_‹¡
+();
+
+	@http_test.js
+
+1 
+v¬
+ 
+	gh‰p
+ = 
+»quœe
+('http');
+
+2 
+v¬
+ 
+	gut
+ = 
+»quœe
+("util");
+
+3 
+v¬
+ 
+	g
+ = "127.0.0.1";
+
+4 
+v¬
+ 
+	gpÜt
+ = 8080;
+
+6 
+	gh‰p
+.
+ü—‹S”v”
+(
+	$funùiÚ
+ (
+»q
+, 
+»s
+){
+
+7 
+cÚsŞe
+.
+	`log
+(
+ut
+.
+	`š¥eù
+(
+»q
+));
+
+8 
+»s
+.
+	`wr™eH—d
+(200, {'Content-Type': 'text/plain'});
+
+9 
+»s
+.
+	`’d
+('Hello World\n');
+
+10 
+cÚsŞe
+.
+	`log
+(
+ut
+.
+	`š¥eù
+(
+»s
+));
+
+11 
+	}
+}).
+li¡’
+(
+pÜt
+, 
+
+);
+
+	@learn_1.js
+
+1 (
+	$funùiÚ
+(){
+
+2 
+Œy
+ {
+
+4 
+cÚsŞe
+.
+	`log
+({ "x" : 5 });
+
+5 } 
+	`ÿtch
+ (
+”r
+) {
+
+6 
+cÚsŞe
+.
+	`log
+(
+”r
+);
+
+8 
+	}
+}());
+
+10 (
+	$funùiÚ
+(){
+
+11 
+v¬
+ 
+foo
+ = 
+	`funùiÚ
+(){
+
+12 
+	`b¬
+();
+
+14 
+v¬
+ 
+b¬
+ = 
+	`funùiÚ
+(){
+
+15 
+debugg”
+;
+
+17 
+	`foo
+();
+
+18 
+	}
+}());
+
+	@simple_file_pipe.js
+
+1 
+v¬
+ 
+	gh‰p
+ = 
+»quœe
+('http'),
+
+2 
+	gu¾
+ = 
+»quœe
+('url'),
+
+3 
+	g·th
+ = 
+»quœe
+('path'),
+
+4 
+	gfs
+ = 
+»quœe
+('fs');
+
+5 
+v¬
+ 
+	gmimeTy³s
+ = {
+
+13 
+	gh‰p
+.
+ü—‹S”v”
+(
+	$funùiÚ
+(
+»q
+, 
+»s
+) {
+
+14 
+v¬
+ 
+uri
+ = 
+u¾
+.
+	`·r£
+(
+»q
+.u¾).
+·thÇme
+;
+
+15 
+v¬
+ 
+f’ame
+ = 
+·th
+.
+	`još
+(
+´oûss
+.
+	`cwd
+(), 
+	`uÃsÿ³
+(
+uri
+));
+
+16 
+v¬
+ 
+¡©s
+;
+
+18 
+Œy
+ {
+
+19 
+¡©s
+ = 
+fs
+.
+	`l¡©Sync
+(
+f’ame
+);
+
+20 } 
+	`ÿtch
+ (
+e
+) {
+
+21 
+»s
+.
+	`wr™eH—d
+(404, {'Content-Type': 'text/plain'});
+
+22 
+»s
+.
+	`wr™e
+('404 Not Found\n');
+
+23 
+»s
+.
+	`’d
+();
+
+28 ià(
+¡©s
+.
+	`isFe
+()) {
+
+30 
+v¬
+ 
+mimeTy³
+ = 
+mimeTy³s
+[
+·th
+.
+	`exŠame
+(
+f’ame
+).
+	`¥l™
+(".").
+	`»v”£
+()[0]];
+
+31 
+»s
+.
+	`wr™eH—d
+(200, {'CÚ‹Á-Ty³': 
+mimeTy³
+} );
+
+33 
+v¬
+ 
+feSŒ—m
+ = 
+fs
+.
+	`ü—‹R—dSŒ—m
+(
+f’ame
+);
+
+34 
+feSŒ—m
+.
+	`pe
+(
+»s
+);
+
+35 } ià(
+¡©s
+.
+	`isDœeùÜy
+()) {
+
+37 
+»s
+.
+	`wr™eH—d
+(200, {'Content-Type': 'text/plain'});
+
+38 
+»s
+.
+	`wr™e
+('Index oà'+
+uri
++'\n');
+
+39 
+»s
+.
+	`wr™e
+('TODO, show index?\n');
+
+40 
+»s
+.
+	`’d
+();
+
+44 
+»s
+.
+	`wr™eH—d
+(500, {'Content-Type': 'text/plain'});
+
+45 
+»s
+.
+	`wr™e
+('500 Internal serverƒrror\n');
+
+46 
+»s
+.
+	`’d
+();
+
+49 
+	}
+}).
+li¡’
+(8080);
+
+	@
+1
+.
+0
+4
+62
+diagram_router.js
+http_test.js
+learn_1.js
+simple_file_pipe.js

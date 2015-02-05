@@ -1,0 +1,61 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+array_foreach	diagram_router.js	/^function array_foreach(arr, proc)$/;"	f
+array_to_dict	diagram_router.js	/^function array_to_dict(array)$/;"	f
+bar	learn_1.js	/^    var bar = function(){$/;"	f
+diagram_router	diagram_router.js	/^function diagram_router(node_array, id_start, id_end, distance_evaluator)$/;"	f
+dict_foreach	diagram_router.js	/^function dict_foreach(dict, proc)$/;"	f
+do_diagram_router	diagram_router.js	/^function do_diagram_router(ctx)$/;"	f
+dumpObj	diagram_router.js	/^function dumpObj(obj)$/;"	f
+end	diagram_router.js	/^var end = undefined;$/;"	v
+env.add_to_closed	diagram_router.js	/^    env.add_to_closed = function (id, node)$/;"	f
+env.add_to_opened	diagram_router.js	/^    env.add_to_opened = function (id, node)$/;"	f
+env.is_closed	diagram_router.js	/^    env.is_closed = function (id)$/;"	f
+env.is_opened	diagram_router.js	/^    env.is_opened = function (id)$/;"	f
+env.remove_from_opened	diagram_router.js	/^    env.remove_from_opened = function (id)$/;"	f
+error_handler	diagram_router.js	/^function error_handler(error_msg)$/;"	f
+generate_node_array	diagram_router.js	/^function generate_node_array(width, height, walls, holes)$/;"	f
+generate_node_array.filter	diagram_router.js	/^    var filter = function(key, check_x, check_y)$/;"	f
+generate_node_array.make_id	diagram_router.js	/^    var make_id = function(first, second)$/;"	f
+global_test	diagram_router.js	/^function global_test()$/;"	f
+height	diagram_router.js	/^    var height = 4;$/;"	v
+holes	diagram_router.js	/^    var holes = ["3:7", "3:4"];$/;"	v
+http	http_test.js	/^var http = require('http');$/;"	v
+http	simple_file_pipe.js	/^var http = require('http'),$/;"	v
+id	diagram_router.js	/^    var n11 = { id : "1:1" };$/;"	p
+info.get_estimated_distance	diagram_router.js	/^    info.get_estimated_distance = function()$/;"	f
+init_context	diagram_router.js	/^function init_context(ctx, node_array, id_start, id_end, distance_evaluator)$/;"	f
+ip	http_test.js	/^var ip = "127.0.0.1";$/;"	v
+is_array	diagram_router.js	/^function is_array(arr)$/;"	f
+is_node	diagram_router.js	/^function is_node(node)$/;"	f
+is_node_id	diagram_router.js	/^function is_node_id(any)$/;"	f
+is_undefined	diagram_router.js	/^function is_undefined(any)$/;"	f
+make_context	diagram_router.js	/^function make_context()$/;"	f
+make_context.add_node_proc	diagram_router.js	/^    var add_node_proc = function(node)$/;"	f
+make_context.get_node_proc	diagram_router.js	/^    var get_node_proc = function(id)$/;"	f
+make_path_info	diagram_router.js	/^function make_path_info(parent, distance, evaluated_demand)$/;"	f
+mimeTypes.css	simple_file_pipe.js	/^    "css": "text\/css"};$/;"	p
+mimeTypes.html	simple_file_pipe.js	/^    "html": "text\/html",$/;"	p
+mimeTypes.jpeg	simple_file_pipe.js	/^    "jpeg": "image\/jpeg",$/;"	p
+mimeTypes.jpg	simple_file_pipe.js	/^    "jpg": "image\/jpeg",$/;"	p
+mimeTypes.js	simple_file_pipe.js	/^    "js": "text\/javascript",$/;"	p
+mimeTypes.png	simple_file_pipe.js	/^    "png": "image\/png",$/;"	p
+n12.id	diagram_router.js	/^    var n12 = { id : "1:2" };$/;"	p
+n21.id	diagram_router.js	/^    var n21 = { id : "2:1" };$/;"	p
+n22.id	diagram_router.js	/^    var n22 = { id : "2:2" };$/;"	p
+pickup_next_checkpoint	diagram_router.js	/^function pickup_next_checkpoint(ctx, env)$/;"	f
+port	http_test.js	/^var port = 8080;$/;"	v
+return	diagram_router.js	/^    return Object.prototype.toString.call(arr) === '[object Array]';   $/;"	c
+return.toString	diagram_router.js	/^    return Object.prototype.toString.call(arr) === '[object Array]';   $/;"	m
+router_result	diagram_router.js	/^function router_result(ctx, env)$/;"	f
+router_startup	diagram_router.js	/^function router_startup(ctx, env)$/;"	f
+router_step	diagram_router.js	/^function router_step(ctx, env)$/;"	f
+start	diagram_router.js	/^var start = undefined;$/;"	v
+test_node_array	diagram_router.js	/^var test_node_array = undefined;$/;"	v
+util	http_test.js	/^var util = require("util");$/;"	v
+var.n.id	diagram_router.js	/^            var n = { id : node_id };$/;"	p
+walls	diagram_router.js	/^    var walls = ["4:2|3:2", "3:2|3:3", "2:2|2:3", "2:3|1:3", "2:4|1:4", "2:4|2:5", "3:4|3:5", "4:5|3:5", "3:5|2:5", "3:6|2:6", "1:5|1:6", "2:6|1:6", "1:6|1:7"];$/;"	v
