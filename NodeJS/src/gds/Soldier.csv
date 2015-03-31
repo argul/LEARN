@@ -1,6 +1,0 @@
-id,	type,	level,	skills
-int,	int,	int,	int[]
-0,	1,	1,	0
-1,	1,	1,	1|2|3
-2,	1,	2,	1
-3,	1,	3,	2
